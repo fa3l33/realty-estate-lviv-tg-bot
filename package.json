@@ -1,0 +1,29 @@
+{
+  "name": "real-estate-tg-bot",
+  "version": "1.0.0",
+  "description": "develepo version",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon",
+    "build": "rimraf ./dist && tsc",
+    "start": "npm run build && node dist/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@grammyjs/menu": "^1.0.1",
+    "axios": "^0.24.0",
+    "dayjs": "^1.10.7",
+    "dotenv": "^10.0.0",
+    "grammy": "^1.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.10",
+    "nodemon": "^2.0.15",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.4.0",
+    "tslib": "^2.3.1"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {    
+    "target": "ES6",
+    "module": "ESNext",
+    "outDir": "dist",
+    "sourceRoot": "${workspaceFolder}/**/*.ts",
+    "rootDir": "./src",
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "alwaysStrict": true,
+    "skipLibCheck": true
+  },
+  "exclude":[
+    "./node_modules"
+  ]
+}
