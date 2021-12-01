@@ -6,7 +6,7 @@
     "configurations": [
         {
             "type": "node-terminal",
-            "command": "npm run start:dev",
+            "command": "npm run dev",
             "request": "launch",
             "name": "Start Bot",
             "skipFiles": [
@@ -14,7 +14,8 @@
             ],
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
-            ]
+            ],
+            "trace": true
         }
     ]
 }
