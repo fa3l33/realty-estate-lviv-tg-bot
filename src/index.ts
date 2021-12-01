@@ -1,6 +1,7 @@
 import { config } from 'dotenv';
 import { Bot } from 'grammy'
 import { Menu } from '@grammyjs/menu'
+import { registerCommands, setCommands } from './bll/tg/command';
 
 config();
 
@@ -18,6 +19,9 @@ bot.command("menu", async (ctx) => {
   // Send the menu:
   await ctx.reply("Check out this menu:", { reply_markup: menu });
 });
+
+setCommands(bot);
+registerCommands(bot);
 
 bot.start()
 
