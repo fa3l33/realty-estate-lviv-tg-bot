@@ -1,5 +1,11 @@
-import { Context } from "grammy";
+import { SessionContextFlavor } from './../session-context';
+import { propertyMenu } from './../menu/property-menu';
 
-export default function filter(ctx: Context) {
-    ctx.reply("Filter Command should start a filter composition.");
+
+export default async function filter(ctx: SessionContextFlavor) {
+    const userSession = await ctx.session;
+    debugger;
+    ctx.reply("There should be filter information", {
+        reply_markup: propertyMenu,
+    });
 }
