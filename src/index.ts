@@ -1,27 +1,23 @@
+import { Menu } from '@grammyjs/menu';
 import { config } from 'dotenv';
-import { Bot } from 'grammy'
-import { Menu } from '@grammyjs/menu'
+import { Bot, Context, lazySession, LazySessionFlavor, session, SessionFlavor } from 'grammy'
 import { registerCommands, setCommands } from './bll/tg/command';
+import getMenus from './bll/tg/menu';
+import { initialize, SessionContextFlavor } from './bll/tg/session-context';
+import BotSession from './dal/interfaces/bot-session.interface';
 
 config();
 
-const bot = new Bot(process.env.TG_BOT_SECRET_KEY as string);
+const bot = new Bot<SessionContextFlavor>(process.env.TG_BOT_SECRET_KEY as string);
 
-// Creating a simple menu
-const menu = new Menu("my-menu-identifier")
-  .text("A", (ctx) => ctx.reply("You pressed A and bbbb!")).row()
-  .text("B", (ctx) => ctx.reply("You pressed B!"));
-
-// Make it interactive
-bot.use(menu);
-
-bot.command("menu", async (ctx) => {
-  // Send the menu:
-  await ctx.reply("Check out this menu:", { reply_markup: menu });
-});
-
+bot.use(lazySession({ initial: initialize }));
+bot.use(getMenus());
 setCommands(bot);
 registerCommands(bot);
+
+bot.catch((value) => {
+  console.log(value);  
+});
 
 bot.start()
 
