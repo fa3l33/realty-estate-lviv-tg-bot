@@ -1,6 +1,7 @@
-const enum PropertyType {
+export const enum PropertyType {
+    NONE = 0,
     APARTMENT = 1,
-    ROOM = 2,
+    NEW_BUILDING = 2,
     HOUSE = 4,
     LAND = 8,
     COMMERCIAL = 16
