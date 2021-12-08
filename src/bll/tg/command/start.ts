@@ -1,16 +1,4 @@
-import { SessionContextFlavor } from './../session-context';
-import BotSession from '../../../dal/interfaces/bot-session.interface';
-import { User } from 'grammy/out/platform.node';
-
-function mapFromToSession(userSession: BotSession, from: User | undefined) {
-    if (userSession !== undefined && from !== undefined && userSession.id !== from.id) {
-        userSession.id = from.id;
-        userSession.firstName = from.first_name;
-        userSession.lastName = from.last_name;
-        userSession.username = from?.username;
-        userSession.isBot = from.is_bot;
-    }
-}
+import { mapFromToSession, SessionContextFlavor } from './../session-context';
 
 /**
  * Start Command. Show default information.

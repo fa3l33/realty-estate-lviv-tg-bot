@@ -1,10 +1,8 @@
-import { Menu } from '@grammyjs/menu';
 import { config } from 'dotenv';
-import { Bot, Context, lazySession, LazySessionFlavor, session, SessionFlavor } from 'grammy'
+import { Bot, lazySession } from 'grammy'
 import { registerCommands, setCommands } from './bll/tg/command';
 import getMenus from './bll/tg/menu';
 import { initialize, SessionContextFlavor } from './bll/tg/session-context';
-import BotSession from './dal/interfaces/bot-session.interface';
 
 config();
 
