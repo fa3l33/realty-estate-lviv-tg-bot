@@ -5,6 +5,7 @@ import {
   buildCheckedMenu,
   COMMERCIAL,
   DISTRICT_MENU,
+  editFilterTextOnMenuClick,
   HOUSE,
   LAND,
   NEW_BUILDING,
@@ -14,12 +15,13 @@ import {
   togglePropertyFlag,
 } from "./menu-helper";
 import { getUserSession } from "../session-context";
-import { hasFlag } from "../../common/enum-utils";
+import { hasApartmentsEnabled } from "../../enum-helper";
 
 export const propertyMenu: Menu = new Menu(PROPERTY_MENU)
   .text(
     async (ctx) => {
       let userSession = await getUserSession(ctx);
+
       return buildCheckedMenu(
         NEW_BUILDING,
         userSession.propertyType,
@@ -28,9 +30,11 @@ export const propertyMenu: Menu = new Menu(PROPERTY_MENU)
     },
     async (ctx) => {
       let userSession = await getUserSession(ctx);
-      togglePropertyFlag(userSession, PropertyType.NEW_BUILDING);
-
-      ctx.menu.update();
+      togglePropertyFlag(userSession, PropertyType.NEW_BUILDING);      
+      // use eager menu updating to get rid of bad request error from TG
+      // error happens because of menu updating twice for message and for by ctx.menu.update
+      await ctx.menu.update({immediate: true });
+      editFilterTextOnMenuClick(ctx, userSession, propertyMenu);
     }
   )
   .text(
@@ -45,8 +49,8 @@ export const propertyMenu: Menu = new Menu(PROPERTY_MENU)
     async (ctx) => {
       let userSession = await getUserSession(ctx);
       togglePropertyFlag(userSession, PropertyType.APARTMENT);
-
-      ctx.menu.update();
+      await ctx.menu.update({immediate: true });
+      editFilterTextOnMenuClick(ctx, userSession, propertyMenu);
     }
   )
   .row()
@@ -62,8 +66,8 @@ export const propertyMenu: Menu = new Menu(PROPERTY_MENU)
     async (ctx) => {
       let userSession = await getUserSession(ctx);
       togglePropertyFlag(userSession, PropertyType.HOUSE);
-
-      ctx.menu.update();
+      await ctx.menu.update({immediate: true });
+      editFilterTextOnMenuClick(ctx, userSession, propertyMenu);
     }
   )
   .text(
@@ -78,8 +82,8 @@ export const propertyMenu: Menu = new Menu(PROPERTY_MENU)
     async (ctx) => {
       let userSession = await getUserSession(ctx);
       togglePropertyFlag(userSession, PropertyType.LAND);
-
-      ctx.menu.update();
+      await ctx.menu.update({immediate: true });
+      editFilterTextOnMenuClick(ctx, userSession, propertyMenu);
     }
   )
   .row()
@@ -95,8 +99,8 @@ export const propertyMenu: Menu = new Menu(PROPERTY_MENU)
     async (ctx) => {
       let userSession = await getUserSession(ctx);
       togglePropertyFlag(userSession, PropertyType.COMMERCIAL);
-
-      ctx.menu.update();
+      await ctx.menu.update({immediate: true });
+      editFilterTextOnMenuClick(ctx, userSession, propertyMenu);
     }
   )
   .row()
@@ -104,8 +108,7 @@ export const propertyMenu: Menu = new Menu(PROPERTY_MENU)
     let userSession = await getUserSession(ctx);
 
     if (
-      hasFlag(userSession.propertyType, PropertyType.APARTMENT) ||
-      hasFlag(userSession.propertyType, PropertyType.NEW_BUILDING)
+      hasApartmentsEnabled(userSession.propertyType)
     ) {
       ctx.menu.nav(ROOM_MENU);
     } else {

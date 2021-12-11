@@ -1,4 +1,4 @@
-export const enum RoomType {
+export enum RoomType {
     NONE = 0,
     ONE = 1,
     TWO = 2,

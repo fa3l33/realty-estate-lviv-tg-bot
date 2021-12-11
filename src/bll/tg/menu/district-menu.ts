@@ -2,7 +2,7 @@ import { Menu } from "@grammyjs/menu";
 import { DistrictType } from "../../../dal/enums/disctrict-type";
 
 import { PropertyType } from "../../../dal/enums/property-type";
-import { hasFlag } from "../../common/enum-utils";
+import { hasFlag } from "../../../common/enum-utils";
 import { getUserSession } from "../session-context";
 import {
   BACK,
@@ -18,6 +18,7 @@ import {
   HBK,
   toggleDistrictFlag,
   DISTRICT_MENU,
+  editFilterTextOnMenuClick,
 } from "./menu-helper";
 
 export const districtMenu: Menu = new Menu(DISTRICT_MENU)
@@ -32,9 +33,9 @@ export const districtMenu: Menu = new Menu(DISTRICT_MENU)
     },
     async (ctx) => {
       let userSession = await getUserSession(ctx);
-      toggleDistrictFlag(userSession, DistrictType.TAVRICHESK);
-
-      ctx.menu.update();
+      toggleDistrictFlag(userSession, DistrictType.TAVRICHESK);      
+      await ctx.menu.update({immediate: true});
+      editFilterTextOnMenuClick(ctx, userSession, districtMenu);
     }
   )
   .text(
@@ -49,8 +50,8 @@ export const districtMenu: Menu = new Menu(DISTRICT_MENU)
     async (ctx) => {
       let userSession = await getUserSession(ctx);
       toggleDistrictFlag(userSession, DistrictType.ZHILPOSELOK);
-
-      ctx.menu.update();
+      await ctx.menu.update({immediate: true});
+      editFilterTextOnMenuClick(ctx, userSession, districtMenu);
     }
   )
   .row()
@@ -66,8 +67,8 @@ export const districtMenu: Menu = new Menu(DISTRICT_MENU)
     async (ctx) => {
       let userSession = await getUserSession(ctx);
       toggleDistrictFlag(userSession, DistrictType.SHUMENSKIY);
-
-      ctx.menu.update();
+      await ctx.menu.update({immediate: true});
+      editFilterTextOnMenuClick(ctx, userSession, districtMenu);
     }
   )
   .text(
@@ -82,8 +83,8 @@ export const districtMenu: Menu = new Menu(DISTRICT_MENU)
     async (ctx) => {
       let userSession = await getUserSession(ctx);
       toggleDistrictFlag(userSession, DistrictType.CENTER);
-
-      ctx.menu.update();
+      await ctx.menu.update({immediate: true});
+      editFilterTextOnMenuClick(ctx, userSession, districtMenu);
     }
   )
   .row()
@@ -99,8 +100,8 @@ export const districtMenu: Menu = new Menu(DISTRICT_MENU)
     async (ctx) => {
       let userSession = await getUserSession(ctx);
       toggleDistrictFlag(userSession, DistrictType.OSTROV);
-
-      ctx.menu.update();
+      await ctx.menu.update({immediate: true});
+      editFilterTextOnMenuClick(ctx, userSession, districtMenu);
     }
   )
   .text(
@@ -111,8 +112,8 @@ export const districtMenu: Menu = new Menu(DISTRICT_MENU)
     async (ctx) => {
       let userSession = await getUserSession(ctx);
       toggleDistrictFlag(userSession, DistrictType.HBK);
-
-      ctx.menu.update();
+      await ctx.menu.update({immediate: true});
+      editFilterTextOnMenuClick(ctx, userSession, districtMenu);
     }
   )
   .row()

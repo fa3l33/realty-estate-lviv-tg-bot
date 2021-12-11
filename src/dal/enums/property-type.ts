@@ -1,4 +1,4 @@
-export const enum PropertyType {
+export enum PropertyType {
     NONE = 0,
     APARTMENT = 1,
     NEW_BUILDING = 2,

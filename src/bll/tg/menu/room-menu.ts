@@ -13,6 +13,7 @@ import {
   toggleRoomFlag,
   DISTRICT_MENU,
   ROOM_MENU,
+  editFilterTextOnMenuClick,
 } from "./menu-helper";
 
 export const roomMenu: Menu = new Menu(ROOM_MENU)
@@ -24,8 +25,8 @@ export const roomMenu: Menu = new Menu(ROOM_MENU)
       async (ctx) => {
         let userSession = await getUserSession(ctx);
         toggleRoomFlag(userSession, RoomType.ONE);
-
-        ctx.menu.update();
+        await ctx.menu.update({immediate: true});
+        editFilterTextOnMenuClick(ctx, userSession, roomMenu);
       }
     )
     .text(
@@ -36,8 +37,8 @@ export const roomMenu: Menu = new Menu(ROOM_MENU)
       async (ctx) => {
         let userSession = await getUserSession(ctx);
         toggleRoomFlag(userSession, RoomType.TWO);
-
-        ctx.menu.update();
+        await ctx.menu.update({immediate: true});
+        editFilterTextOnMenuClick(ctx, userSession, roomMenu);
       }
     )
     .row()
@@ -49,8 +50,8 @@ export const roomMenu: Menu = new Menu(ROOM_MENU)
       async (ctx) => {
         let userSession = await getUserSession(ctx);
         toggleRoomFlag(userSession, RoomType.THREE);
-
-        ctx.menu.update();
+        await ctx.menu.update({immediate: true});
+        editFilterTextOnMenuClick(ctx, userSession, roomMenu);
       }
     )
     .text(
@@ -61,8 +62,8 @@ export const roomMenu: Menu = new Menu(ROOM_MENU)
       async (ctx) => {
         let userSession = await getUserSession(ctx);
         toggleRoomFlag(userSession, RoomType.FOUR_OR_MORE);
-
-        ctx.menu.update();
+        await ctx.menu.update({immediate: true});
+        editFilterTextOnMenuClick(ctx, userSession, roomMenu);
       }
     )
     .row()

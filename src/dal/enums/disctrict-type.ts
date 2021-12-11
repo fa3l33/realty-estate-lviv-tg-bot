@@ -1,4 +1,4 @@
-export const enum DistrictType {
+export enum DistrictType {
     NONE = 0,
     TAVRICHESK = 1,
     CENTER = 2,
