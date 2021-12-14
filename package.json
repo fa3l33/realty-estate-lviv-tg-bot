@@ -10,7 +10,7 @@
     "devBuild": "npx rimraf ./dist && npx tsc",
     "build": "npx tsc",
     "start": "npm run build && node --experimental-specifier-resolution=node dist/src/index.js"
-  },  
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -18,14 +18,14 @@
     "axios": "^0.24.0",
     "dayjs": "^1.10.7",
     "dotenv": "^10.0.0",
-    "grammy": "^1.4.2"
+    "grammy": "^1.4.2",
+    "typescript": "^4.5.4"
   },
   "devDependencies": {
     "@types/node": "^16.11.10",
     "nodemon": "^2.0.15",
     "rimraf": "^3.0.2",
     "ts-node": "^10.4.0",
-    "tslib": "^2.3.1",
-    "typescript": "^4.5.2"
+    "tslib": "^2.3.1"
   }
 }
