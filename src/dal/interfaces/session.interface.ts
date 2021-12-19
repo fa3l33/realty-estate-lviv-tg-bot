@@ -11,11 +11,11 @@ export interface Session {
     // determine if user wants to receive updates
     isActive: boolean,
     // time when user started to use bot
-    startTS: number,
+    startTS: Date,
     // last time filter was updated
-    lastUpdateTS: number,
+    lastUpdateTS: Date,
     // last notification send date
-    notifiedAtTS?: number,
+    notifiedAtTS?: Date,
     // determines where to after property menu
     isRoomMenuVisited: boolean
 }

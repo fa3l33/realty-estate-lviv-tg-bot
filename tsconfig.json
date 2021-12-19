@@ -1,7 +1,7 @@
 {
   "compilerOptions": {    
     "target": "ES6",
-    "module": "ESNext",
+    "module": "CommonJS",
     "outDir": "dist",
     "sourceRoot": "${workspaceFolder}/**/*.ts",
     "rootDir": "./",
@@ -9,7 +9,16 @@
     "moduleResolution": "node",
     "strict": true,
     "alwaysStrict": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noImplicitAny": true,
+    "declaration": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "downlevelIteration": true
   },
   "exclude":[
     "./node_modules"

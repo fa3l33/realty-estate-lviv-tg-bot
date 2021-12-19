@@ -10,4 +10,5 @@ export interface User {
   lastName?: string;
   /** User's or bot's username */
   username?: string;
+  phoneNumber?: string;
 }
