@@ -47,3 +47,4 @@ build
 dev
 nodemon.json
 .vscode
+ormconfig.json
