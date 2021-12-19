@@ -47,4 +47,5 @@ build
 dev
 nodemon.json
 .vscode
+!.vscode/launch.json
 ormconfig.json

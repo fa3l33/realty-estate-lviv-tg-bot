@@ -4,7 +4,7 @@
   "description": "Develop version",
   "main": "./dist/index.js",
   "scripts": {
-    "test": "",
+    "test": "ts-node node_modules/jasmine/bin/jasmine --config=jasmine.json",
     "dev": "nodemon",
     "devBuild": "npx rimraf ./dist && npx tsc",
     "build": "npx tsc",
@@ -23,7 +23,9 @@
     "typeorm": "^0.2.41"
   },
   "devDependencies": {
+    "@types/jasmine": "^3.10.2",
     "@types/node": "^16.11.10",
+    "jasmine": "^3.10.0",
     "nodemon": "^2.0.15",
     "rimraf": "^3.0.2",
     "ts-node": "^10.4.0",
