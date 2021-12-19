@@ -10,17 +10,18 @@ export function initialize(): BotSession {
   return {
     id: 0,
     isBot: false,
-    firstName: "",
+    firstName: '',
     lastName: undefined,
     propertyType: PropertyType.NONE,
     roomType: RoomType.NONE,
     districtType: DistrictType.NONE,
     menuStep: MenuStep.PROPERTY,
     isActive: true,
-    startTS: Date.now(),
-    lastUpdateTS: Date.now(),
+    startTS: new Date(),
+    lastUpdateTS: new Date(),
     notifiedAtTS: undefined,
-    isRoomMenuVisited: false
+    isRoomMenuVisited: false,
+    phoneNumber: undefined
   };
 }
 
