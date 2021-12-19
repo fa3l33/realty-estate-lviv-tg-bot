@@ -16,6 +16,19 @@
                 "${workspaceFolder}/**/*.js"
             ],
             "trace": true
+        },
+        {
+            "type": "node-terminal",
+            "command": "npm run test",
+            "request": "launch",
+            "name": "Start Test",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ],
+            "trace": true
         }
     ]
 }
