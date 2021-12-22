@@ -1,14 +1,14 @@
-import { DistrictType } from "./../../enums/disctrict-type";
-import { RoomType } from "./../../enums/room-type";
-import { PropertyType } from "./../../enums/property-type";
+import { DistrictType } from './../../enums/disctrict-type';
+import { RoomType } from './../../enums/room-type';
+import { PropertyType } from './../../enums/property-type';
 import {
   Entity,
   Column,
   PrimaryColumn
-} from "typeorm";
-import { MenuStep } from "../../enums/menu-step-type";
+} from 'typeorm';
+import { MenuStep } from '../../enums/menu-step-type';
 
-@Entity("tg_user")
+@Entity('tg_user')
 export class User {
   /** Unique identifier for this user or bot. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier. */
   @PrimaryColumn({
@@ -33,25 +33,25 @@ export class User {
   })
   phoneNumber?: string;
   @Column({
-    type: "enum",
+    type: 'enum',
     enum: PropertyType,
     default: PropertyType.NONE,
   })
   propertyType!: PropertyType;
   @Column({
-    type: "enum",
+    type: 'enum',
     enum: RoomType,
     default: RoomType.NONE,
   })
   roomType!: RoomType;
   @Column({
-    type: "enum",
+    type: 'enum',
     enum: DistrictType,
     default: DistrictType.NONE,
   })
   districtType!: DistrictType;
   @Column({
-    type: "enum",
+    type: 'enum',
     enum: MenuStep,
     default: MenuStep.PROPERTY,
   })
