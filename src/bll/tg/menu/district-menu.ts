@@ -5,28 +5,21 @@ import { PropertyType } from "../../../dal/enums/property-type";
 import { hasFlag } from "../../../common/enum-utils";
 import { getUserSession } from "../session-context";
 import {
-  BACK,
   buildCheckedMenu,
   PROPERTY_MENU,
   ROOM_MENU,
-  TAVRICHESK,
-  CENTER,
-  ZHILPOSELOK,
-  OSTROV,
-  READY,
-  SHUMENSKIY,
-  HBK,
   toggleDistrictFlag,
   DISTRICT_MENU,
   editFilterTextOnMenuClick,
 } from "./menu-helper";
+import Constants from "../constants";
 
 export const districtMenu: Menu = new Menu(DISTRICT_MENU)
   .text(
     async (ctx) => {
       let userSession = await getUserSession(ctx);
       return buildCheckedMenu(
-        TAVRICHESK,
+        Constants.TAVRICHESK,
         userSession.districtType,
         DistrictType.TAVRICHESK
       );
@@ -42,7 +35,7 @@ export const districtMenu: Menu = new Menu(DISTRICT_MENU)
     async (ctx) => {
       let userSession = await getUserSession(ctx);
       return buildCheckedMenu(
-        ZHILPOSELOK,
+        Constants.ZHILPOSELOK,
         userSession.districtType,
         DistrictType.ZHILPOSELOK
       );
@@ -59,7 +52,7 @@ export const districtMenu: Menu = new Menu(DISTRICT_MENU)
     async (ctx) => {
       let userSession = await getUserSession(ctx);
       return buildCheckedMenu(
-        SHUMENSKIY,
+        Constants.SHUMENSKIY,
         userSession.districtType,
         DistrictType.SHUMENSKIY
       );
@@ -75,7 +68,7 @@ export const districtMenu: Menu = new Menu(DISTRICT_MENU)
     async (ctx) => {
       let userSession = await getUserSession(ctx);
       return buildCheckedMenu(
-        CENTER,
+        Constants.CENTER,
         userSession.districtType,
         DistrictType.CENTER
       );
@@ -92,7 +85,7 @@ export const districtMenu: Menu = new Menu(DISTRICT_MENU)
     async (ctx) => {
       let userSession = await getUserSession(ctx);
       return buildCheckedMenu(
-        OSTROV,
+        Constants.OSTROV,
         userSession.districtType,
         DistrictType.OSTROV
       );
@@ -107,7 +100,7 @@ export const districtMenu: Menu = new Menu(DISTRICT_MENU)
   .text(
     async (ctx) => {
       let userSession = await getUserSession(ctx);
-      return buildCheckedMenu(HBK, userSession.districtType, DistrictType.HBK);
+      return buildCheckedMenu(Constants.HBK, userSession.districtType, DistrictType.HBK);
     },
     async (ctx) => {
       let userSession = await getUserSession(ctx);
@@ -117,7 +110,7 @@ export const districtMenu: Menu = new Menu(DISTRICT_MENU)
     }
   )
   .row()
-  .text(BACK, async (ctx) => {
+  .text(Constants.BACK, async (ctx) => {
     let userSession = await getUserSession(ctx);
 
     if (
@@ -129,6 +122,6 @@ export const districtMenu: Menu = new Menu(DISTRICT_MENU)
         ctx.menu.nav(PROPERTY_MENU);
     }
   })
-  .text(READY, (ctx) => {
+  .text(Constants.READY, (ctx) => {
     ctx.menu.close();
   });
