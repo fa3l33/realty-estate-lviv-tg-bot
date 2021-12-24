@@ -33,27 +33,19 @@ export class User {
   })
   phoneNumber?: string;
   @Column({
-    type: 'enum',
-    enum: PropertyType,
-    default: PropertyType.NONE,
+    type: 'smallint',
   })
   propertyType!: PropertyType;
   @Column({
-    type: 'enum',
-    enum: RoomType,
-    default: RoomType.NONE,
+    type: 'smallint',
   })
   roomType!: RoomType;
   @Column({
-    type: 'enum',
-    enum: DistrictType,
-    default: DistrictType.NONE,
+    type: 'smallint',
   })
   districtType!: DistrictType;
   @Column({
-    type: 'enum',
-    enum: MenuStep,
-    default: MenuStep.PROPERTY,
+    type: 'smallint',
   })
   menuStep!: MenuStep;
   // determine if user wants to receive updates
