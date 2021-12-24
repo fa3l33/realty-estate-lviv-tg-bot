@@ -54,7 +54,7 @@ export function editFilterTextOnMenuClick(
     let chatId = message?.chat.id;
     let messageId = message?.message_id;
 
-    ctx.api.editMessageText(chatId, messageId, buildFilter(userSession), {
+    ctx.api.editMessageText(chatId, messageId, MessageBuilder.buildFilter(userSession), {
       parse_mode: "HTML",
       reply_markup: menu,
     });

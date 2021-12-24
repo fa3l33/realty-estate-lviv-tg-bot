@@ -5,7 +5,7 @@ import cancel from './cancel';
 import filter from './filter';
 import help from './help';
 import start from './start';
-import { templateOne, templateTwo } from './template-one';
+import { templateOne} from './template-one';
 
 
 export async function setCommands(bot: Bot<SessionContextFlavor>) {
@@ -25,5 +25,4 @@ export function registerCommands(bot: Bot<SessionContextFlavor>) {
     bot.command("help", help);
     bot.command("cancel", cancel);
     bot.command("one", templateOne);
-    bot.command("two", templateTwo);
 }
