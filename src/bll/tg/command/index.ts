@@ -5,7 +5,7 @@ import cancel from './cancel';
 import filter from './filter';
 import help from './help';
 import start from './start';
-import { templateOne} from './template-one';
+import { templateMenu, templateOne} from './template-one';
 
 
 export async function setCommands(bot: Bot<SessionContextFlavor>) {
@@ -15,7 +15,7 @@ export async function setCommands(bot: Bot<SessionContextFlavor>) {
         { command: "cancel", description: "Discard notification." },
         { command: "filter", description: "Filter editing." },
         { command: "one", description: "Template 1" },
-        { command: "two", description: "Template 2" },
+        { command: "two", description: "Menu 2" },
     ]);
 }
 
@@ -25,4 +25,5 @@ export function registerCommands(bot: Bot<SessionContextFlavor>) {
     bot.command("help", help);
     bot.command("cancel", cancel);
     bot.command("one", templateOne);
+    bot.command("two", templateMenu);
 }

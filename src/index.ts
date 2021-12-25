@@ -22,6 +22,10 @@ async function bootstrap() {
   bot.use(getMenus());
   setCommands(bot);
   registerCommands(bot);
+
+  bot.on('message:text', ctx => {
+    bot.api.deleteMessage(ctx.chat.id, ctx.message.message_id);
+  });
   
   bot.catch((value) => {
     console.log(value);  
