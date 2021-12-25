@@ -1,3 +1,5 @@
+import { ApartmentPriceType } from './../enums/apartment-price-type';
+import { PriceType } from './../enums/price-type';
 import { DistrictType } from "../enums/disctrict-type";
 import { MenuStep } from "../enums/menu-step-type";
 import { PropertyType } from "../enums/property-type";
@@ -8,6 +10,8 @@ export interface Session {
     roomType: RoomType,
     districtType: DistrictType,
     menuStep: MenuStep,
+    priceType: PriceType,
+    apartmentPriceType: ApartmentPriceType,
     // determine if user wants to receive updates
     isActive: boolean,
     // time when user started to use bot

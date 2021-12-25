@@ -1,16 +1,12 @@
 import { Menu } from "@grammyjs/menu";
 import { DistrictType } from "../../../dal/enums/disctrict-type";
-
-import { PropertyType } from "../../../dal/enums/property-type";
-import { hasFlag } from "../../../common/enum-utils";
 import { getUserSession } from "../session-context";
 import {
   buildCheckedMenu,
-  PROPERTY_MENU,
-  ROOM_MENU,
   toggleDistrictFlag,
   DISTRICT_MENU,
   editFilterTextOnMenuClick,
+  PRICE_MENU,
 } from "./menu-helper";
 import Constants from "../constants";
 
@@ -110,17 +106,8 @@ export const districtMenu: Menu = new Menu(DISTRICT_MENU)
     }
   )
   .row()
-  .text(Constants.BACK, async (ctx) => {
-    let userSession = await getUserSession(ctx);
-
-    if (
-      hasFlag(userSession.propertyType, PropertyType.APARTMENT) ||
-      hasFlag(userSession.propertyType, PropertyType.NEW_BUILDING)
-    ) {
-      ctx.menu.nav(ROOM_MENU);
-    } else {
-        ctx.menu.nav(PROPERTY_MENU);
-    }
+  .back(Constants.BACK, async (ctx) => {
+      ctx.menu.nav(PRICE_MENU);
   })
   .text(Constants.READY, (ctx) => {
     ctx.menu.close();

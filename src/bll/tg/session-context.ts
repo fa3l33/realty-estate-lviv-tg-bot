@@ -1,7 +1,9 @@
 import { Context, LazySessionFlavor } from 'grammy';
 import { User } from 'grammy/out/platform.node';
+import { ApartmentPriceType } from '../../dal/enums/apartment-price-type';
 import { DistrictType } from '../../dal/enums/disctrict-type';
 import { MenuStep } from '../../dal/enums/menu-step-type';
+import { PriceType } from '../../dal/enums/price-type';
 import { PropertyType } from '../../dal/enums/property-type';
 import { RoomType } from '../../dal/enums/room-type';
 import BotSession from '../../dal/interfaces/bot-session.interface';
@@ -15,6 +17,8 @@ export function initialize(): BotSession {
     propertyType: PropertyType.NONE,
     roomType: RoomType.NONE,
     districtType: DistrictType.NONE,
+    priceType: PriceType.NONE,
+    apartmentPriceType: ApartmentPriceType.NONE,
     menuStep: MenuStep.PROPERTY,
     isActive: true,
     startTS: new Date(),

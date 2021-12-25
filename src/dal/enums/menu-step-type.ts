@@ -1,5 +1,6 @@
 export enum MenuStep {
     PROPERTY = 1,
     ROOM = 2,
-    DISTRICT = 3,
+    PRICE = 3,
+    DISTRICT = 4,
 }

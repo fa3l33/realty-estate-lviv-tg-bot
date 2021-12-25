@@ -1,3 +1,5 @@
+import { ApartmentPriceType } from './../../enums/apartment-price-type';
+import { PriceType } from './../../enums/price-type';
 import { DistrictType } from './../../enums/disctrict-type';
 import { RoomType } from './../../enums/room-type';
 import { PropertyType } from './../../enums/property-type';
@@ -44,6 +46,14 @@ export class User {
     type: 'smallint',
   })
   districtType!: DistrictType;
+  @Column({
+    type: 'smallint',
+  })
+  priceType!: PriceType;
+  @Column({
+    type: 'smallint',
+  })
+  apartmentPriceType!: ApartmentPriceType;
   @Column({
     type: 'smallint',
   })
