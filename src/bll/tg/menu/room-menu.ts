@@ -1,15 +1,10 @@
 import { Menu } from "@grammyjs/menu";
 import { RoomType } from "../../../dal/enums/room-type";
+import Constants from "../constants";
 import { getUserSession } from "../session-context";
 import {
-  BACK,
   buildCheckedMenu,
-  FOUR_OR_MORE,
-  ONE,
   PROPERTY_MENU,
-  THREE,
-  TWO,
-  NEXT,
   toggleRoomFlag,
   DISTRICT_MENU,
   ROOM_MENU,
@@ -20,7 +15,7 @@ export const roomMenu: Menu = new Menu(ROOM_MENU)
     .text(
       async (ctx) => {
         let userSession = await getUserSession(ctx);
-        return buildCheckedMenu(ONE, userSession.roomType, RoomType.ONE);
+        return buildCheckedMenu(Constants.ONE, userSession.roomType, RoomType.ONE);
       },      
       async (ctx) => {
         let userSession = await getUserSession(ctx);
@@ -32,7 +27,7 @@ export const roomMenu: Menu = new Menu(ROOM_MENU)
     .text(
       async (ctx) => {
         let userSession = await getUserSession(ctx);
-        return buildCheckedMenu(TWO, userSession.roomType, RoomType.TWO);
+        return buildCheckedMenu(Constants.TWO, userSession.roomType, RoomType.TWO);
       },      
       async (ctx) => {
         let userSession = await getUserSession(ctx);
@@ -45,7 +40,7 @@ export const roomMenu: Menu = new Menu(ROOM_MENU)
     .text(
       async (ctx) => {
         let userSession = await getUserSession(ctx);
-        return buildCheckedMenu(THREE, userSession.roomType, RoomType.THREE);
+        return buildCheckedMenu(Constants.THREE, userSession.roomType, RoomType.THREE);
       },      
       async (ctx) => {
         let userSession = await getUserSession(ctx);
@@ -57,7 +52,7 @@ export const roomMenu: Menu = new Menu(ROOM_MENU)
     .text(
       async (ctx) => {
         let userSession = await getUserSession(ctx);
-        return buildCheckedMenu(FOUR_OR_MORE, userSession.roomType, RoomType.FOUR_OR_MORE);
+        return buildCheckedMenu(Constants.FOUR_OR_MORE, userSession.roomType, RoomType.FOUR_OR_MORE);
       },
       async (ctx) => {
         let userSession = await getUserSession(ctx);
@@ -67,9 +62,9 @@ export const roomMenu: Menu = new Menu(ROOM_MENU)
       }
     )
     .row()
-    .back(BACK,  async (ctx) => {
+    .back(Constants.BACK,  async (ctx) => {
       ctx.menu.nav(PROPERTY_MENU);
     })
-    .text(NEXT, async (ctx) => {
+    .text(Constants.NEXT, async (ctx) => {
       ctx.menu.nav(DISTRICT_MENU);
     });

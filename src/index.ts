@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { config } from 'dotenv';
+import config from './config';
 import { Bot, lazySession } from 'grammy'
 import { createConnection } from 'typeorm';
 import { registerCommands, setCommands } from './bll/tg/command';
@@ -10,12 +10,9 @@ import { TypeOrmAdapter } from './dal/user-storage-adapter';
 
 async function bootstrap() {
   // create global MySql connection
-  const connection = await createConnection();
-
-  // load .env
-  config();
+  const connection = await createConnection();  
   
-  const bot = new Bot<SessionContextFlavor>(process.env.TG_BOT_SECRET_KEY as string);
+  const bot = new Bot<SessionContextFlavor>(config.telegram.BOT_SECRET_KEY as string);
   
   bot.use(lazySession({
      initial: initialize,
@@ -25,6 +22,10 @@ async function bootstrap() {
   bot.use(getMenus());
   setCommands(bot);
   registerCommands(bot);
+
+  bot.on('message:text', ctx => {
+    bot.api.deleteMessage(ctx.chat.id, ctx.message.message_id);
+  });
   
   bot.catch((value) => {
     console.log(value);  

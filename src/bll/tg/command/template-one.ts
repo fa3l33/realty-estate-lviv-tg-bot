@@ -1,35 +1,14 @@
-import { InlineKeyboard } from 'grammy';
-import { SessionContextFlavor } from './../session-context';
+import { PropertyType } from './../../../dal/enums/property-type';
+//import { InlineKeyboard } from 'grammy';
+import { Keyboard } from 'grammy';
+import config from '../../../config';
+import Constants from '../constants';
+import { buildCheckedMenu } from '../menu/menu-helper';
+import { MessageBuilder } from '../message-builder';
+import { getUserSession, SessionContextFlavor } from './../session-context';
 
 export const imageURLs: Array<string> = ["http://www.realtygroup.info/images/realty/39072/viber image.jpg0000.jpg", "http://www.realtygroup.info/images/realty/39072/viber image.jpg11111.jpg",
             "http://www.realtygroup.info/images/realty/39072/viber image.jpg54334.jpg", "http://www.realtygroup.info/images/realty/39072/viber image.jpg88888.jpg"];
-
-function oneMsg() {
-    return `<b>Продам 2-комнатную квартиру</b>
-    
-Тип объекта: <b>Новостройка</b>
-Комнаты: <b>2</b>
-Район: <b>ХБК</b>
-Добавлен: <b>01.12.2021</b>
-
-<a href="http://www.realtygroup.info/">Check on Site</a>
- `;
-}
-
-function twoMsg() {
-    return `<b>Продам 2-комнатную квартиру</b>
-    
-Тип объекта: <b>Новостройка</b>
-Комнаты: <b>2</b>
-Район: <b>ХБК</b>
-Добавлен: <b>01.12.2021</b>
- `;
-}
-
-const inlineKeyboard = new InlineKeyboard().url(
-    "Check on Site",
-    "http://www.realtygroup.info/",
-  );
 
 export async function templateOne(ctx: SessionContextFlavor) {
     let chatId: number = Number(ctx.chat?.id);
@@ -47,43 +26,54 @@ export async function templateOne(ctx: SessionContextFlavor) {
         type: "photo"
     },
     {
-        media: imageURLs[2],
-        type: "photo"
-    },
-    {
         media: imageURLs[3],
         type: "photo",
-        caption: oneMsg(),
+        caption: MessageBuilder.buildMessage(),
         parse_mode: "HTML"
-    }]);
+    }]).then(() => {
+        ctx.api.sendContact(chatId, config.realtyGroup.MANAGER_PHONE as string, 'Realty Group');
+    });
 }
 
-export async function templateTwo(ctx: SessionContextFlavor) {
-    let chatId: number = Number(ctx.chat?.id);
+export async function templateMenu(ctx: SessionContextFlavor) {
+    //let chatId: number = Number(ctx.chat?.id);
 
-    ctx.api.sendMediaGroup(chatId, [{
-        media: imageURLs[0],
-        type: "photo"
-    },
-    {
-        media: imageURLs[1],
-        type: "photo"        
-    },
-    {
-        media: imageURLs[2],
-        type: "photo"
-    },
-    {
-        media: imageURLs[2],
-        type: "photo"
-    },
-    {
-        media: imageURLs[3],
-        type: "photo",
-    }], ).then((messages) => {
-        ctx.api.sendMessage(messages[0].chat.id, twoMsg(), {
-            parse_mode: "HTML",
-            reply_markup: inlineKeyboard
-        });
-    });
+    let userSession = await getUserSession(ctx);
+    let propertyBtn: string = await buildCheckedMenu(
+          Constants.NEW_BUILDING,
+          userSession.propertyType,
+          PropertyType.NEW_BUILDING
+        );
+    let houseBtn: string = await buildCheckedMenu(
+        Constants.HOUSE,
+        userSession.propertyType,
+        PropertyType.HOUSE
+      );
+
+    let landBtn: string = await buildCheckedMenu(
+        Constants.LAND,
+        userSession.propertyType,
+        PropertyType.LAND
+      );
+
+    let commercialBtn: string = await buildCheckedMenu(
+        Constants.COMMERCIAL,
+        userSession.propertyType,
+        PropertyType.COMMERCIAL
+      );
+
+    let nextBtn = Constants.NEXT;
+
+    const keyboard = new Keyboard().text(propertyBtn).row()
+        .text(houseBtn).row()
+        .text(landBtn).row()
+        .text(commercialBtn).row()
+        .text(nextBtn);
+
+    await ctx.reply('some random text', {
+      reply_markup: {
+        keyboard: keyboard.build(),
+        force_reply: true
+      },
+    });    
 }

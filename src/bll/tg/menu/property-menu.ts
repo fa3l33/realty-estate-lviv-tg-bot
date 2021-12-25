@@ -1,21 +1,16 @@
 import { Menu } from "@grammyjs/menu";
 import { PropertyType } from "../../../dal/enums/property-type";
 import {
-  APARTMENT,
   buildCheckedMenu,
-  COMMERCIAL,
   DISTRICT_MENU,
   editFilterTextOnMenuClick,
-  HOUSE,
-  LAND,
-  NEW_BUILDING,
-  NEXT,
   PROPERTY_MENU,
   ROOM_MENU,
   togglePropertyFlag,
 } from "./menu-helper";
 import { getUserSession } from "../session-context";
-import { hasApartmentsEnabled } from "../../enum-helper";
+import Constants from "../constants";
+import EnumHelper from "../../enum-helper";
 
 export const propertyMenu: Menu = new Menu(PROPERTY_MENU)
   .text(
@@ -23,7 +18,7 @@ export const propertyMenu: Menu = new Menu(PROPERTY_MENU)
       let userSession = await getUserSession(ctx);
 
       return buildCheckedMenu(
-        NEW_BUILDING,
+        Constants.NEW_BUILDING,
         userSession.propertyType,
         PropertyType.NEW_BUILDING
       );
@@ -41,7 +36,7 @@ export const propertyMenu: Menu = new Menu(PROPERTY_MENU)
     async (ctx) => {
       let userSession = await getUserSession(ctx);
       return buildCheckedMenu(
-        APARTMENT,
+        Constants.APARTMENT,
         userSession.propertyType,
         PropertyType.APARTMENT
       );
@@ -58,7 +53,7 @@ export const propertyMenu: Menu = new Menu(PROPERTY_MENU)
     async (ctx) => {
       let userSession = await getUserSession(ctx);
       return buildCheckedMenu(
-        HOUSE,
+        Constants.HOUSE,
         userSession.propertyType,
         PropertyType.HOUSE
       );
@@ -74,7 +69,7 @@ export const propertyMenu: Menu = new Menu(PROPERTY_MENU)
     async (ctx) => {
       let userSession = await getUserSession(ctx);
       return buildCheckedMenu(
-        LAND,
+        Constants.LAND,
         userSession.propertyType,
         PropertyType.LAND
       );
@@ -91,7 +86,7 @@ export const propertyMenu: Menu = new Menu(PROPERTY_MENU)
     async (ctx) => {
       let userSession = await getUserSession(ctx);
       return buildCheckedMenu(
-        COMMERCIAL,
+        Constants.COMMERCIAL,
         userSession.propertyType,
         PropertyType.COMMERCIAL
       );
@@ -104,11 +99,11 @@ export const propertyMenu: Menu = new Menu(PROPERTY_MENU)
     }
   )
   .row()
-  .text(NEXT, async (ctx) => {
+  .text(Constants.NEXT, async (ctx) => {
     let userSession = await getUserSession(ctx);
 
     if (
-      hasApartmentsEnabled(userSession.propertyType)
+      EnumHelper.hasApartmentsEnabled(userSession.propertyType)
     ) {
       ctx.menu.nav(ROOM_MENU);
     } else {
