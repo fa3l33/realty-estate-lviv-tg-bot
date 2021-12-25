@@ -29,12 +29,19 @@ export abstract class MessageBuilder {
     public static buildFilter(userSession: BotSession) {
         let filter = `${ TextUtils.toBold('Налаштування') } \n\n`    
         + `${ TextUtils.toBold(TextUtils.toUnderline('Рубрика:')) } ${EnumHelper.propertyEnumToString(userSession.propertyType)}\n`
-        + `${ TextUtils.toBold(TextUtils.toUnderline('Мікрорайон:'))} ${EnumHelper.districtEnumToString(userSession.districtType)}\n`;
-
+        
         if (EnumHelper.hasApartmentsEnabled(userSession.propertyType))
         {
             filter += `${ TextUtils.toBold(TextUtils.toUnderline('Кількість кімнат:')) } ${ EnumHelper.roomEnumToString(userSession.roomType)}\n`;
         }
+        
+        if (EnumHelper.hasNonApartmentEnabled(userSession.propertyType)) {
+            filter += `${ TextUtils.toBold(TextUtils.toUnderline('Ціна: '))} ${ EnumHelper.priceEnumToString(userSession.priceType)}\n`;
+        } else {
+            filter += `${ TextUtils.toBold(TextUtils.toUnderline('Ціна: '))} ${ EnumHelper.apartmentPriceEnumToString(userSession.apartmentPriceType)}\n`;
+        }
+
+        filter += `${ TextUtils.toBold(TextUtils.toUnderline('Мікрорайон:'))} ${EnumHelper.districtEnumToString(userSession.districtType)}\n`;
 
         return filter;
     }

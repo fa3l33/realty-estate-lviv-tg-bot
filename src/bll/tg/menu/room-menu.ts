@@ -6,9 +6,9 @@ import {
   buildCheckedMenu,
   PROPERTY_MENU,
   toggleRoomFlag,
-  DISTRICT_MENU,
   ROOM_MENU,
   editFilterTextOnMenuClick,
+  PRICE_MENU,
 } from "./menu-helper";
 
 export const roomMenu: Menu = new Menu(ROOM_MENU)
@@ -66,5 +66,5 @@ export const roomMenu: Menu = new Menu(ROOM_MENU)
       ctx.menu.nav(PROPERTY_MENU);
     })
     .text(Constants.NEXT, async (ctx) => {
-      ctx.menu.nav(DISTRICT_MENU);
+      ctx.menu.nav(PRICE_MENU);
     });

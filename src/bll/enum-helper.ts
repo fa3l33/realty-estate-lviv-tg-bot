@@ -1,3 +1,5 @@
+import { ApartmentPriceType } from './../dal/enums/apartment-price-type';
+import { PriceType } from './../dal/enums/price-type';
 import { hasFlag } from "../common/enum-utils";
 import { DistrictType } from "../dal/enums/disctrict-type";
 import { PropertyType } from "../dal/enums/property-type";
@@ -20,6 +22,22 @@ export default abstract class EnumHelper {
         [RoomType.TWO, Constants.TWO],
         [RoomType.THREE, Constants.THREE],
         [RoomType.FOUR_OR_MORE, Constants.FOUR_OR_MORE],
+    ]);
+
+    public static readonly priceTypeMap: Map<number, string> = new Map<number, string>([
+        [PriceType.NONE, Constants.STRING_EMPTY],
+        [PriceType.FROM_20_TO_40, Constants.PRICES.FROM_20_TO_40],
+        [PriceType.FROM_40_TO_60, Constants.PRICES.FROM_40_TO_60],
+        [PriceType.FROM_60_TO_100, Constants.PRICES.FROM_60_TO_100],
+        [PriceType.FROM_100_AND_MORE, Constants.PRICES.FROM_100_AND_MORE],
+    ]);
+
+    public static readonly apartmentPriceTypeMap: Map<number, string> = new Map<number, string>([
+        [ApartmentPriceType.NONE, Constants.STRING_EMPTY],
+        [ApartmentPriceType.FROM_20_TO_35, Constants.APARTMENT_PRICES.FROM_20_TO_35],
+        [ApartmentPriceType.FROM_35_TO_45, Constants.APARTMENT_PRICES.FROM_35_TO_45],
+        [ApartmentPriceType.FROM_45_TO_60, Constants.APARTMENT_PRICES.FROM_45_TO_60],
+        [ApartmentPriceType.FROM_60_AND_MORE, Constants.APARTMENT_PRICES.FROM_60_AND_MORE],
     ]);
     
     public static readonly districtTypeMap: Map<number, string> = new Map<number, string>([
@@ -44,14 +62,36 @@ export default abstract class EnumHelper {
         return EnumHelper.enumToString(value, entries, EnumHelper.roomTypeMap);
     }
     
+    public static priceEnumToString(value: PriceType) : string {
+        let entries = Object.entries(PriceType);
+        
+        return EnumHelper.enumToString(value, entries, EnumHelper.priceTypeMap);
+    }
+
+    public static apartmentPriceEnumToString(value: ApartmentPriceType) : string {
+        let entries = Object.entries(ApartmentPriceType);
+        
+        return EnumHelper.enumToString(value, entries, EnumHelper.apartmentPriceTypeMap);
+    }
+    
     public static districtEnumToString(value: DistrictType): string {
         let entries = Object.entries(DistrictType);
         
         return EnumHelper.enumToString(value, entries, EnumHelper.districtTypeMap);
     }
     
-    public static hasApartmentsEnabled(value: PropertyType) {
+    /**
+     * Check if value has APARTMENT or NEW_BUILDING flags
+     */
+    public static hasApartmentsEnabled(value: PropertyType) : boolean {
         return hasFlag(value, PropertyType.APARTMENT) || hasFlag(value, PropertyType.NEW_BUILDING);
+    }
+
+    /**
+     * Check if value has HOUSE or LAND or COMMERCIAL flags
+     */
+    public static hasNonApartmentEnabled(value: PropertyType) : boolean {
+        return hasFlag(value, PropertyType.HOUSE) || hasFlag(value, PropertyType.LAND) || hasFlag(value, PropertyType.COMMERCIAL);
     }
 
     // usually entries has reverse keyValue entry and original keyValue entry

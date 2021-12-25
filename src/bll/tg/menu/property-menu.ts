@@ -2,8 +2,8 @@ import { Menu } from "@grammyjs/menu";
 import { PropertyType } from "../../../dal/enums/property-type";
 import {
   buildCheckedMenu,
-  DISTRICT_MENU,
   editFilterTextOnMenuClick,
+  PRICE_MENU,
   PROPERTY_MENU,
   ROOM_MENU,
   togglePropertyFlag,
@@ -107,6 +107,6 @@ export const propertyMenu: Menu = new Menu(PROPERTY_MENU)
     ) {
       ctx.menu.nav(ROOM_MENU);
     } else {
-      ctx.menu.nav(DISTRICT_MENU);
+      ctx.menu.nav(PRICE_MENU);
     }
   });

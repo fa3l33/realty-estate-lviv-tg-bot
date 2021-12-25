@@ -7,9 +7,12 @@ import BotSession from "../../../dal/interfaces/bot-session.interface";
 import { hasFlag, toggleFlag } from "../../../common/enum-utils";
 import { addChecked } from "../../emoji";
 import { MessageBuilder } from "../message-builder";
+import { PriceType } from "../../../dal/enums/price-type";
+import { ApartmentPriceType } from "../../../dal/enums/apartment-price-type";
 
 export const PROPERTY_MENU = "PROPERTY-MENU";
 export const ROOM_MENU = "ROOM-MENU";
+export const PRICE_MENU = "PRICE-MENU"
 export const DISTRICT_MENU = "DISTRICT-MENU";
 
 export async function buildCheckedMenu(
@@ -40,6 +43,20 @@ export function toggleDistrictFlag(
   districtFlag: DistrictType
 ) {
   userSession.districtType = toggleFlag(userSession.districtType, districtFlag);
+}
+
+export function togglePriceFlag(
+  userSession: BotSession,
+  priceFlag: PriceType
+) {
+  userSession.priceType = toggleFlag(userSession.priceType, priceFlag);
+}
+
+export function toggleApartmentPriceFlag(
+  userSession: BotSession,
+  apartmentPriceFlag: ApartmentPriceType
+) {
+  userSession.apartmentPriceType = toggleFlag(userSession.apartmentPriceType, apartmentPriceFlag);
 }
 
 // edit filter text on menu click
