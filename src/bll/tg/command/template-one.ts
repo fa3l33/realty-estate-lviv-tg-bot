@@ -1,6 +1,5 @@
 import { PropertyType } from './../../../dal/enums/property-type';
-//import { InlineKeyboard } from 'grammy';
-import { Keyboard } from 'grammy';
+import { InlineKeyboard, Keyboard } from 'grammy';
 import config from '../../../config';
 import Constants from '../constants';
 import { buildCheckedMenu } from '../menu/menu-helper';
@@ -12,6 +11,7 @@ export const imageURLs: Array<string> = ["http://www.realtygroup.info/images/rea
 
 export async function templateOne(ctx: SessionContextFlavor) {
     let chatId: number = Number(ctx.chat?.id);
+    let userSession = await getUserSession(ctx);
 
     ctx.api.sendMediaGroup(chatId, [{
         media: imageURLs[0],
@@ -28,10 +28,28 @@ export async function templateOne(ctx: SessionContextFlavor) {
     {
         media: imageURLs[3],
         type: "photo",
-        caption: MessageBuilder.buildMessage(),
-        parse_mode: "HTML"
-    }]).then(() => {
-        ctx.api.sendContact(chatId, config.realtyGroup.MANAGER_PHONE as string, 'Realty Group');
+        // caption: MessageBuilder.buildMessage(),
+        // parse_mode: "HTML",
+    }]).then((messages) => {
+      ctx.reply(MessageBuilder.buildMessage(), {
+        parse_mode: 'HTML',
+        reply_markup: new InlineKeyboard().text('Дізнатись більше у менеджера', `${ userSession.id }-1232534`)
+      })
+    
+      // ctx.api.editMessageReplyMarkup(lastMesasge.chat.id, lastMesasge.message_id, {
+      //   reply_markup: new InlineKeyboard().text('Ohaio', '1241256')
+      // });
+
+      // ctx.reply('Give me your phone', {
+      //   reply_markup: 
+      //   {
+      //     one_time_keyboard: true,
+      //     keyboard: new Keyboard().requestContact('Share your phone number.').build(),
+      //     resize_keyboard: true
+      //   }
+      // });
+      
+      ctx.api.sendContact(chatId, config.realtyGroup.MANAGER_PHONE as string, 'Realty Group');
     });
 }
 
@@ -64,16 +82,18 @@ export async function templateMenu(ctx: SessionContextFlavor) {
 
     let nextBtn = Constants.NEXT;
 
-    const keyboard = new Keyboard().text(propertyBtn).row()
-        .text(houseBtn).row()
-        .text(landBtn).row()
-        .text(commercialBtn).row()
+    const keyboard = new Keyboard().text(propertyBtn)
+        .text(houseBtn)
+        .text(landBtn)
+        .text(commercialBtn)
         .text(nextBtn);
 
     await ctx.reply('some random text', {
       reply_markup: {
         keyboard: keyboard.build(),
-        force_reply: true
+        force_reply: true,
+        resize_keyboard: true,
+        one_time_keyboard: true
       },
     });    
 }
