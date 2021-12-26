@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import config from './config';
-import { Bot, lazySession } from 'grammy'
+import { Bot, Keyboard, lazySession } from 'grammy'
 import { createConnection } from 'typeorm';
 import { registerCommands, setCommands } from './bll/tg/command';
 import getMenus from './bll/tg/menu';
@@ -24,7 +24,34 @@ async function bootstrap() {
   registerCommands(bot);
 
   bot.on('message:text', ctx => {
-    bot.api.deleteMessage(ctx.chat.id, ctx.message.message_id);
+    // bot.api.deleteMessage(ctx.chat.id, ctx.message.message_id);
+    ctx.reply('thx', 
+    {
+      reply_markup: { remove_keyboard: true }
+    });
+  });
+
+  bot.on('message:contact', ctx => {
+    ctx.reply('thx', 
+    {
+      reply_markup: {remove_keyboard: true }
+    });
+  });
+
+  bot.on('callback_query:data', ctx => {    
+    ctx.answerCallbackQuery();
+    console.log(ctx.callbackQuery.data);    
+
+      ctx.reply(`Оберіть спосіб для зворотнього зв'язку.`, {
+        reply_markup: 
+        {
+          one_time_keyboard: true,
+          keyboard: new Keyboard().requestContact('Зателефонуйте мені\n (поділитися номером телефону)').row().text('Напишіть мені.').build(),
+          resize_keyboard: true,
+          selective: true,
+          input_field_placeholder: `Оберіть спосіб для зворотнього зв'язку.`
+        }
+      });
   });
   
   bot.catch((value) => {
