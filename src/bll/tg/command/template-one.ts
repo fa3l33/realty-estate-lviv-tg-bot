@@ -1,3 +1,4 @@
+import { Item } from './../../../dal/model/rg_zoo/item';
 import { PropertyType } from './../../../dal/enums/property-type';
 import { InlineKeyboard, Keyboard } from 'grammy';
 import config from '../../../config';
@@ -5,6 +6,7 @@ import Constants from '../constants';
 import { buildCheckedMenu } from '../menu/menu-helper';
 import { MessageBuilder } from '../message-builder';
 import { getUserSession, SessionContextFlavor } from './../session-context';
+import { getRepository } from 'typeorm';
 
 export const imageURLs: Array<string> = ["http://www.realtygroup.info/images/realty/39072/viber image.jpg0000.jpg", "http://www.realtygroup.info/images/realty/39072/viber image.jpg11111.jpg",
             "http://www.realtygroup.info/images/realty/39072/viber image.jpg54334.jpg", "http://www.realtygroup.info/images/realty/39072/viber image.jpg88888.jpg"];
@@ -30,11 +32,17 @@ export async function templateOne(ctx: SessionContextFlavor) {
         type: "photo",
         // caption: MessageBuilder.buildMessage(),
         // parse_mode: "HTML",
-    }]).then((messages) => {
-      ctx.reply(MessageBuilder.buildMessage(), {
-        parse_mode: 'HTML',
-        reply_markup: new InlineKeyboard().text('Дізнатись більше у менеджера', `${ userSession.id }-1232534`)
-      })
+    }]).then(async (messages) => {
+      let item = await getRepository(Item).findOne(75001, {
+        relations: ['categories']
+      });
+
+      if (item) {
+        ctx.reply(MessageBuilder.buildMessage(item), {
+          parse_mode: 'HTML',
+          reply_markup: new InlineKeyboard().text('Дізнатись більше у менеджера', `${ userSession.id }-1232534`)
+        });
+      }
     
       // ctx.api.editMessageReplyMarkup(lastMesasge.chat.id, lastMesasge.message_id, {
       //   reply_markup: new InlineKeyboard().text('Ohaio', '1241256')
