@@ -1,28 +1,36 @@
-//import { Item } from './../../dal/model/rg_zoo/item';
+import { ItemElementType } from './../../dal/enums/item-elemnt-type';
+import { ItemElementMap } from './../../dal/item-element-map';
+import { Item } from './../../dal/model/rg_zoo/item';
 import TextUtils from '../../common/text-utils';
-import Constants from './constants';
 import BotSession from '../../dal/interfaces/bot-session.interface';
 import EnumHelper from '../enum-helper';
 import config from '../../config';
 import { URL } from 'url';
+import { CategoryHelper } from '../category-helper';
 
 
-export abstract class MessageBuilder { 
-    public static buildMessage() : string {
+export abstract class MessageBuilder {
+    private static readonly VALUE: string = 'value';
+    private static readonly FIRST_PROPERTY = '0';
+    private static readonly OPTION: string = 'option';
+
+    public static buildMessage(item: Item) : string {
+        let elements = JSON.parse(item.elements);
+
         return (
-          `${TextUtils.toBold('Item Name')}\n\n` +
-          MessageBuilder.getDescription() +
-          MessageBuilder.getPrice() +
-          MessageBuilder.getPropertyType() +
-          MessageBuilder.getDistrict() +
-          MessageBuilder.getRooms() +
-          MessageBuilder.getFloor() +
-          MessageBuilder.getHouseFloors() +
-          MessageBuilder.getHouseArea() +
-          MessageBuilder.getTotalArea() +
-          MessageBuilder.getLiveArea() +
-          MessageBuilder.getKitchenArea() +
-          `\n` + this.getSiteURL()
+          `${TextUtils.toBold(item.name)}\n\n` +
+          MessageBuilder.getValue(elements, ItemElementType.DESCRIPTION, 'Опис:') + '\n' +
+          MessageBuilder.getValue(elements, ItemElementType.PRICE_USD, 'Вартість (usd):') +
+          MessageBuilder.getPropertyType(item) +
+          MessageBuilder.getDistrict(elements) +
+          MessageBuilder.getValue(elements, ItemElementType.ROOMS_COUNT, 'Кількість кімнат:') +
+          MessageBuilder.getValue(elements, ItemElementType.FLOOR, 'Поверх:') +
+          MessageBuilder.getValue(elements, ItemElementType.HOUSE_TOTAL_FLOORS, 'Поверхів в будівлі:') +
+          MessageBuilder.getValue(elements, ItemElementType.LAND_HOUSE_AREA, 'Площа ділянки:') +
+          MessageBuilder.getValue(elements, ItemElementType.TOTAL_AREA, 'Загальні площа:') +
+          MessageBuilder.getValue(elements, ItemElementType.LIVE_AREA, 'Житлова площа:') +
+          MessageBuilder.getValue(elements, ItemElementType.KITCHEN_AREA, 'Площа кухні:') +
+          `\n` + this.getSiteURL(item.id)
         );
     }
 
@@ -46,52 +54,39 @@ export abstract class MessageBuilder {
         return filter;
     }
 
-    private static getPropertyType() : string {
-        return `Рубрика: ${ TextUtils.toBold(Constants.NEW_BUILDING) }\n`;
-    }
-
-    private static getPrice() : string {
-        return `Вартість: ${ TextUtils.toBold(Constants.NEW_BUILDING) }\n`;
-    }
-
-    private static getDistrict() : string {
-        return `Мікрорайон: ${ TextUtils.toBold(Constants.NEW_BUILDING) }\n`;
-    }
-
+    private static getPropertyType(item: Item) : string {
+        // categories: apartment, house, land, commercial, new buildings
+        let propertyCategory = item.categories.find((ct) => [6, 7, 8, 9, 30].includes(ct.id));
     
-    private static getRooms() : string {
-        return `Кількість кімнат: ${ TextUtils.toBold(Constants.NEW_BUILDING) }\n`;
-    }
-    
-    private static getFloor() : string {
-        return `Поверх: ${ TextUtils.toBold(Constants.NEW_BUILDING) }\n`;
-    }
-    
-    private static getHouseFloors() : string {
-        return `Поверхів в будівлі: ${ TextUtils.toBold(Constants.NEW_BUILDING) }\n`;
+        if (propertyCategory) {
+            return `${ TextUtils.toBold('Рубрика:') } ${ CategoryHelper.asString(propertyCategory.id) }\n`;
+        }
+
+        return '';
     }
 
-    private static getTotalArea() : string {
-        return `Загальні площа: ${ TextUtils.toBold(Constants.NEW_BUILDING) }\n`;
+    private static getValue(elements: any, itemElementType: ItemElementType, label: string) 
+    {
+        let values = elements[ItemElementMap.get(itemElementType)!];
+
+        if (values && values[this.FIRST_PROPERTY] && values[this.FIRST_PROPERTY][this.VALUE]) {
+            return `${ TextUtils.toBold(label)} ${values[this.FIRST_PROPERTY][this.VALUE]}\n`;
+        }
+
+        return '';
     }
 
-    private static getLiveArea() : string {
-        return `Житлова площа: ${ TextUtils.toBold(Constants.NEW_BUILDING) }\n`;
-    }
+    private static getDistrict(elements: any) : string {
+        let values = elements[ItemElementMap.get(ItemElementType.DISTRICT)!];
 
-    private static getKitchenArea() : string {
-        return `Площа кухні: ${ TextUtils.toBold(Constants.NEW_BUILDING) }\n`;
-    }
+        if (values && values[this.OPTION] && values[this.OPTION][this.FIRST_PROPERTY]) {
+            return `${ TextUtils.toBold('Мікрорайон:')} ${values[this.OPTION][this.FIRST_PROPERTY]}\n`;
+        }
 
-    private static getHouseArea() : string {
-        return `Площа ділянки: ${ TextUtils.toBold(Constants.NEW_BUILDING) }\n`;
-    }
+        return '';
+    }        
 
-    private static getDescription() : string {
-        return `Опис: ${ TextUtils.toBold(Constants.NEW_BUILDING) }\n`;
-    }
-
-    private static getSiteURL() : string{
-        return TextUtils.toLink('Переглянуті на сайті', new URL(config.realtyGroup.SITE_URL as string));
+    private static getSiteURL(id: number) : string{
+        return TextUtils.toLink('Переглянуті на сайті', new URL((config.realtyGroup.SITE_URL as string) + `/item/${id}`));
     }
 }
