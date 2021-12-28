@@ -7,6 +7,7 @@ import getMenus from './bll/tg/menu';
 import { initialize, SessionContextFlavor } from './bll/tg/session-context';
 import { User } from './dal/model/tg/user';
 import { TypeOrmAdapter } from './dal/user-storage-adapter';
+import { registerMenuCallbacks } from './bll/tg/command/template-one';
 
 async function bootstrap() {
   // create global MySql connection
@@ -23,14 +24,8 @@ async function bootstrap() {
   setCommands(bot);
   registerCommands(bot);
 
-  bot.on('message:text', ctx => {
-    // bot.api.deleteMessage(ctx.chat.id, ctx.message.message_id);
-    ctx.reply('thx', 
-    {
-      reply_markup: { remove_keyboard: true }
-    });
-  });
-
+  registerMenuCallbacks(bot);
+  
   bot.on('message:contact', ctx => {
     ctx.reply('thx', 
     {

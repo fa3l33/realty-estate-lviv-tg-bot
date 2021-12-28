@@ -15,7 +15,7 @@ export const ROOM_MENU = "ROOM-MENU";
 export const PRICE_MENU = "PRICE-MENU"
 export const DISTRICT_MENU = "DISTRICT-MENU";
 
-export async function buildCheckedMenu(
+export function buildCheckedMenu(
   menuValue: string,
   value: number,
   checkFlag: number
