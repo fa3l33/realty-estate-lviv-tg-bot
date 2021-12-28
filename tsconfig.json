@@ -18,7 +18,8 @@
     "noImplicitReturns": true,
     "strictNullChecks": true,
     "noUnusedLocals": true,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "removeComments": true
   },
   "exclude":[
     "./node_modules"
