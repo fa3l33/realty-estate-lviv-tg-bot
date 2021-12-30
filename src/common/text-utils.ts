@@ -1,5 +1,3 @@
-import { URL } from "url";
-
 export default class TextUtils {
     /**
      * Envelops value into html bold tag
@@ -26,7 +24,7 @@ export default class TextUtils {
     /**
      * Creates an html link
      */
-    public static toLink(value: string, link: URL) : string {
-        return `<a href="${ link.href }">${ TextUtils.toBold(value) }</a>`;
+    public static toLink(value: string, link: string) : string {
+        return `<a href="${ link }">${ TextUtils.toBold(value) }</a>`;
     }
 }

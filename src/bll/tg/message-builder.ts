@@ -5,7 +5,6 @@ import TextUtils from '../../common/text-utils';
 import BotSession from '../../dal/interfaces/bot-session.interface';
 import EnumHelper from '../enum-helper';
 import config from '../../config';
-import { URL } from 'url';
 import { CategoryHelper } from '../category-helper';
 
 
@@ -87,6 +86,6 @@ export abstract class MessageBuilder {
     }        
 
     private static getSiteURL(id: number) : string{
-        return TextUtils.toLink('Переглянуті на сайті', new URL((config.realtyGroup.SITE_URL as string) + `/item/${id}`));
+        return TextUtils.toLink('Переглянуті на сайті', (config.realtyGroup.SITE_URL as string) + `/item/${id}`);
     }
 }
