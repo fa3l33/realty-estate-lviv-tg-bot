@@ -2,6 +2,7 @@
 
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
+const { PinoWebpackPlugin } = require('pino-webpack-plugin')
 
 const isProduction = process.env.NODE_ENV == 'production';
 
@@ -14,6 +15,7 @@ const config = {
         path: path.resolve(__dirname, 'dist'),
     },
     plugins: [
+        new PinoWebpackPlugin({ transports: ['pino-pretty'] })
         // Add your plugins here
         // Learn more about plugins from https://webpack.js.org/configuration/plugins/
     ],

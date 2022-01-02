@@ -20,6 +20,8 @@
     "dotenv": "^10.0.0",
     "grammy": "^1.4.2",
     "mysql": "^2.18.1",
+    "node-schedule": "^2.1.0",
+    "pino": "^7.6.2",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.41"
   },
@@ -29,6 +31,7 @@
     "@types/webpack": "^5.28.0",
     "jasmine": "^3.10.0",
     "nodemon": "^2.0.15",
+    "pino-webpack-plugin": "^1.1.0",
     "rimraf": "^3.0.2",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.4.0",
