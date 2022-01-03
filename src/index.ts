@@ -2,13 +2,11 @@ import "reflect-metadata";
 import config from "./config";
 import { Bot, Keyboard, lazySession } from "grammy";
 import { getRepository } from "typeorm";
-import { registerCommands, setCommands } from "./bll/tg/command";
-import getMenus from "./bll/tg/menu";
 import { initialize, SessionContextFlavor } from "./bll/tg/session-context";
 import { User } from "./dal/model/tg/user";
 import { TypeOrmAdapter } from "./dal/user-storage-adapter";
-import { registerMenuCallbacks } from "./bll/tg/command/template-one";
 import initializeDataBase from "./db-initializer";
+import CommandHelper from "./bll/tg/command/command-helper";
  
 async function bootstrap() {
     // create global MySql connection
@@ -25,11 +23,7 @@ async function bootstrap() {
       })
     );
 
-    bot.use(getMenus());
-    setCommands(bot);
-    registerCommands(bot);
-
-    registerMenuCallbacks(bot);
+    CommandHelper.init(bot);
 
     bot.on("message:contact", (ctx) => {
       ctx.reply("thx", {
