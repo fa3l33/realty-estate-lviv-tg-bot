@@ -7,9 +7,11 @@ import { User } from "./dal/model/tg/user";
 import { TypeOrmAdapter } from "./dal/user-storage-adapter";
 import initializeDataBase from "./db-initializer";
 import CommandHelper from "./bll/tg/command/command-helper";
-import ItemNotificationService from "./bll/service/jobs/item-notification.service";
-import ItemFilterService from "./bll/service/item-filter.service";
-import IItemNotificationService from "./bll/service/jobs/item-notification.interface";
+import NotificationJob from "./bll/service/jobs/notification.job";
+import ItemFilterService from "./bll/service/item/item-filter.service";
+import INotificationJob from "./bll/service/jobs/inotification.job";
+import UserService from "./bll/service/user/user.service";
+import ItemService from "./bll/service/item/item.service";
  
 async function bootstrap() {
     // create global MySql connection
@@ -27,7 +29,11 @@ async function bootstrap() {
     );
 
     CommandHelper.init(bot);
-    const itemNotificationService: IItemNotificationService = new ItemNotificationService(bot, new ItemFilterService());
+    const itemNotificationService: INotificationJob = new NotificationJob(
+      new UserService(),
+      new ItemFilterService(),
+      new ItemService(bot)
+    );
     itemNotificationService.start();
 
     bot.on("message:contact", (ctx) => {
