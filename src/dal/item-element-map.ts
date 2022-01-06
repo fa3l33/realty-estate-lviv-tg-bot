@@ -1,4 +1,4 @@
-import { ItemElementType } from './enums/item-elemnt-type';
+import { ItemElementType } from "./enums/tg/item-elemnt-type";
 
 export const ItemElementMap: Map<ItemElementType, string> = new Map<ItemElementType, string>([
     [ItemElementType.IS_VISIBLE_ON_SITE, '299a6fa4-9e97-45c2-aac4-3b66fc41f6ce'],
