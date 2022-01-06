@@ -7,6 +7,9 @@ import { User } from "./dal/model/tg/user";
 import { TypeOrmAdapter } from "./dal/user-storage-adapter";
 import initializeDataBase from "./db-initializer";
 import CommandHelper from "./bll/tg/command/command-helper";
+import ItemNotificationService from "./bll/service/jobs/item-notification.service";
+import ItemFilterService from "./bll/service/item-filter.service";
+import IItemNotificationService from "./bll/service/jobs/item-notification.interface";
  
 async function bootstrap() {
     // create global MySql connection
@@ -24,6 +27,8 @@ async function bootstrap() {
     );
 
     CommandHelper.init(bot);
+    const itemNotificationService: IItemNotificationService = new ItemNotificationService(bot, new ItemFilterService());
+    itemNotificationService.start();
 
     bot.on("message:contact", (ctx) => {
       ctx.reply("thx", {
@@ -33,7 +38,6 @@ async function bootstrap() {
 
     bot.on("callback_query:data", (ctx) => {
       ctx.answerCallbackQuery();
-      console.log(ctx.callbackQuery.data);
 
       ctx.reply(`Оберіть спосіб для зворотнього зв'язку.`, {
         reply_markup: {
