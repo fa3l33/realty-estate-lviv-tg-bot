@@ -11,4 +11,5 @@ export interface User {
   /** User's or bot's username */
   username?: string;
   phoneNumber?: string;
+  chatId: number;
 }
