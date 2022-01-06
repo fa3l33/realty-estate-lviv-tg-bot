@@ -1,70 +1,78 @@
-import { Menu } from "@grammyjs/menu";
-import { RoomType } from "../../../dal/enums/room-type";
+import { MenuStep } from './../../../dal/enums/menu-step-type';
+import { Api, Bot, Keyboard, RawApi } from 'grammy';
+import { RoomType } from './../../../dal/enums/room-type';
 import Constants from "../constants";
-import { getUserSession } from "../session-context";
-import {
-  buildCheckedMenu,
-  PROPERTY_MENU,
-  toggleRoomFlag,
-  ROOM_MENU,
-  editFilterTextOnMenuClick,
-  PRICE_MENU,
-} from "./menu-helper";
+import { buildCheckedMenu, toggleRoomFlag } from './menu-helper';
+import BotSession from '../../../dal/interfaces/bot-session.interface';
+import IMenu from './menu.interface';
+import { getUserSession, SessionContextFlavor } from '../session-context';
+import { addChecked } from '../../emoji';
+import Menu from './Menu';
 
-export const roomMenu: Menu = new Menu(ROOM_MENU)
-    .text(
-      async (ctx) => {
-        let userSession = await getUserSession(ctx);
-        return buildCheckedMenu(Constants.ONE, userSession.roomType, RoomType.ONE);
-      },      
-      async (ctx) => {
-        let userSession = await getUserSession(ctx);
-        toggleRoomFlag(userSession, RoomType.ONE);
-        await ctx.menu.update({immediate: true});
-        editFilterTextOnMenuClick(ctx, userSession, roomMenu);
-      }
-    )
-    .text(
-      async (ctx) => {
-        let userSession = await getUserSession(ctx);
-        return buildCheckedMenu(Constants.TWO, userSession.roomType, RoomType.TWO);
-      },      
-      async (ctx) => {
-        let userSession = await getUserSession(ctx);
-        toggleRoomFlag(userSession, RoomType.TWO);
-        await ctx.menu.update({immediate: true});
-        editFilterTextOnMenuClick(ctx, userSession, roomMenu);
-      }
-    )
+export default class  RoomMenu extends Menu implements IMenu {
+  getMenu(userSession: BotSession): Keyboard {
+    return new Keyboard()
+    .text(buildCheckedMenu(Constants.ONE, userSession.roomType, RoomType.ONE))
+    .text(buildCheckedMenu(Constants.TWO, userSession.roomType, RoomType.TWO))
     .row()
     .text(
-      async (ctx) => {
-        let userSession = await getUserSession(ctx);
-        return buildCheckedMenu(Constants.THREE, userSession.roomType, RoomType.THREE);
-      },      
-      async (ctx) => {
-        let userSession = await getUserSession(ctx);
-        toggleRoomFlag(userSession, RoomType.THREE);
-        await ctx.menu.update({immediate: true});
-        editFilterTextOnMenuClick(ctx, userSession, roomMenu);
-      }
+      buildCheckedMenu(Constants.THREE, userSession.roomType, RoomType.THREE)
     )
     .text(
-      async (ctx) => {
-        let userSession = await getUserSession(ctx);
-        return buildCheckedMenu(Constants.FOUR_OR_MORE, userSession.roomType, RoomType.FOUR_OR_MORE);
+      buildCheckedMenu(
+        Constants.FOUR_OR_MORE,
+        userSession.roomType,
+        RoomType.FOUR_OR_MORE
+      )
+    )
+    .row()
+    .text(Constants.BACK)
+    .text(Constants.NEXT);  
+  }
+
+  addListener(bot: Bot<SessionContextFlavor, Api<RawApi>>): void {
+    bot.on("message:text").filter(
+      (ctx) => {
+        return [
+          Constants.ONE,
+          Constants.TWO,
+          Constants.THREE,
+          Constants.FOUR_OR_MORE,
+          addChecked(Constants.ONE),
+          addChecked(Constants.TWO),
+          addChecked(Constants.THREE),
+          addChecked(Constants.FOUR_OR_MORE),
+        ].includes(ctx.message.text);
       },
       async (ctx) => {
         let userSession = await getUserSession(ctx);
-        toggleRoomFlag(userSession, RoomType.FOUR_OR_MORE);
-        await ctx.menu.update({immediate: true});
-        editFilterTextOnMenuClick(ctx, userSession, roomMenu);
-      }
-    )
-    .row()
-    .back(Constants.BACK,  async (ctx) => {
-      ctx.menu.nav(PROPERTY_MENU);
-    })
-    .text(Constants.NEXT, async (ctx) => {
-      ctx.menu.nav(PRICE_MENU);
-    });
+        userSession.menuStep = MenuStep.ROOM;
+  
+        let ONE_CHECKED = addChecked(Constants.ONE);
+        let TWO_CHECKED = addChecked(Constants.TWO);
+        let THREE_CHECKED = addChecked(Constants.THREE);
+        let FOUR_OR_MORE_CHECKED = addChecked(Constants.FOUR_OR_MORE);
+  
+        switch (ctx.message.text) {
+          case Constants.ONE:
+          case ONE_CHECKED:
+            toggleRoomFlag(userSession, RoomType.ONE);
+            break;
+          case Constants.TWO:
+          case TWO_CHECKED:
+            toggleRoomFlag(userSession, RoomType.TWO);
+            break;
+          case Constants.THREE:
+          case THREE_CHECKED:
+            toggleRoomFlag(userSession, RoomType.THREE);
+            break;
+          case Constants.FOUR_OR_MORE:
+          case FOUR_OR_MORE_CHECKED:
+            toggleRoomFlag(userSession, RoomType.FOUR_OR_MORE);
+            break;
+        }
+  
+        this.sendMenu(ctx, this.getMenu(userSession));
+      });
+  }
+}

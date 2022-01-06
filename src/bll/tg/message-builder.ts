@@ -13,13 +13,15 @@ export abstract class MessageBuilder {
     private static readonly FIRST_PROPERTY = '0';
     private static readonly OPTION: string = 'option';
 
-    public static buildMessage(item: Item) : string {
+    public static buildItemInfo(item: Item, includeDescription: boolean = false) : string {
         let elements = JSON.parse(item.elements);
+        let itemInfo = `${TextUtils.toBold(item.name)}\n\n`;
 
-        return (
-          `${TextUtils.toBold(item.name)}\n\n` +
-          MessageBuilder.getValue(elements, ItemElementType.DESCRIPTION, 'Опис:') + '\n' +
-          MessageBuilder.getValue(elements, ItemElementType.PRICE_USD, 'Вартість (usd):') +
+          if (includeDescription) {
+              itemInfo += MessageBuilder.getValue(elements, ItemElementType.DESCRIPTION, 'Опис:') + '\n';
+          }
+
+          itemInfo += MessageBuilder.getValue(elements, ItemElementType.PRICE_USD, 'Вартість (usd):') +
           MessageBuilder.getPropertyType(item) +
           MessageBuilder.getDistrict(elements) +
           MessageBuilder.getValue(elements, ItemElementType.ROOMS_COUNT, 'Кількість кімнат:') +
@@ -30,7 +32,8 @@ export abstract class MessageBuilder {
           MessageBuilder.getValue(elements, ItemElementType.LIVE_AREA, 'Житлова площа:') +
           MessageBuilder.getValue(elements, ItemElementType.KITCHEN_AREA, 'Площа кухні:') +
           `\n` + this.getSiteURL(item.id)
-        );
+
+        return itemInfo;
     }
 
     public static buildFilter(userSession: BotSession) {

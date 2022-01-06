@@ -1,5 +1,5 @@
 import { Context, LazySessionFlavor } from 'grammy';
-import { User } from 'grammy/out/platform.node';
+import { Chat, User } from 'grammy/out/platform.node';
 import { ApartmentPriceType } from '../../dal/enums/apartment-price-type';
 import { DistrictType } from '../../dal/enums/disctrict-type';
 import { MenuStep } from '../../dal/enums/menu-step-type';
@@ -24,18 +24,19 @@ export function initialize(): BotSession {
     startTS: new Date(),
     lastUpdateTS: new Date(),
     notifiedAtTS: undefined,
-    isRoomMenuVisited: false,
-    phoneNumber: undefined
+    phoneNumber: undefined,
+    chatId: 0
   };
 }
 
-export function mapFromToSession(userSession: BotSession, from: User | undefined) {
+export function mapFromToSession(userSession: BotSession, from: User | undefined, chat: Chat | undefined) {
   if (userSession !== undefined && from !== undefined && userSession.id !== from.id) {
       userSession.id = from.id;
       userSession.firstName = from.first_name;
       userSession.lastName = from.last_name;
       userSession.username = from?.username;
       userSession.isBot = from.is_bot;
+      userSession.chatId = chat!.id
   }
 }
 

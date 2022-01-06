@@ -20,6 +20,4 @@ export interface Session {
     lastUpdateTS: Date,
     // last notification send date
     notifiedAtTS?: Date,
-    // determines where to after property menu
-    isRoomMenuVisited: boolean
 }

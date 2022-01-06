@@ -35,6 +35,10 @@ export class User {
   })
   phoneNumber?: string;
   @Column({
+    nullable: false,
+  })
+  chatId!: number;
+  @Column({
     type: 'smallint',
   })
   propertyType!: PropertyType;
@@ -73,7 +77,4 @@ export class User {
     default: null
   })
   notifiedAtTS?: Date;
-  // determines where to after property menu
-  @Column()
-  isRoomMenuVisited!: boolean;
 }

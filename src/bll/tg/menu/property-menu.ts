@@ -1,112 +1,109 @@
-import { Menu } from "@grammyjs/menu";
-import { PropertyType } from "../../../dal/enums/property-type";
-import {
-  buildCheckedMenu,
-  editFilterTextOnMenuClick,
-  PRICE_MENU,
-  PROPERTY_MENU,
-  ROOM_MENU,
-  togglePropertyFlag,
-} from "./menu-helper";
-import { getUserSession } from "../session-context";
+import { MenuStep } from "./../../../dal/enums/menu-step-type";
+import { PropertyType } from "./../../../dal/enums/property-type";
+import { Api, Bot, Keyboard, RawApi } from "grammy";
+import BotSession from "../../../dal/interfaces/bot-session.interface";
 import Constants from "../constants";
-import EnumHelper from "../../enum-helper";
+import { buildCheckedMenu, togglePropertyFlag } from "./menu-helper";
+import IMenu from "./menu.interface";
+import { getUserSession, SessionContextFlavor } from "../session-context";
+import { addChecked } from "../../emoji";
+import Menu from "./Menu";
 
-export const propertyMenu: Menu = new Menu(PROPERTY_MENU)
-  .text(
-    async (ctx) => {
-      let userSession = await getUserSession(ctx);
+export default class PropertyMenu extends Menu implements IMenu {
+  getMenu(userSession: BotSession): Keyboard {
+    return new Keyboard()
+      .text(
+        buildCheckedMenu(
+          Constants.NEW_BUILDING,
+          userSession.propertyType,
+          PropertyType.NEW_BUILDING
+        )
+      )
+      .text(
+        buildCheckedMenu(
+          Constants.APARTMENT,
+          userSession.propertyType,
+          PropertyType.APARTMENT
+        )
+      )
+      .row()
+      .text(
+        buildCheckedMenu(
+          Constants.HOUSE,
+          userSession.propertyType,
+          PropertyType.HOUSE
+        )
+      )
+      .text(
+        buildCheckedMenu(
+          Constants.LAND,
+          userSession.propertyType,
+          PropertyType.LAND
+        )
+      )
+      .row()
+      .text(
+        buildCheckedMenu(
+          Constants.COMMERCIAL,
+          userSession.propertyType,
+          PropertyType.COMMERCIAL
+        )
+      )
+      .row()
+      .text(Constants.NEXT);
+  }
 
-      return buildCheckedMenu(
-        Constants.NEW_BUILDING,
-        userSession.propertyType,
-        PropertyType.NEW_BUILDING
-      );
-    },
-    async (ctx) => {
-      let userSession = await getUserSession(ctx);
-      togglePropertyFlag(userSession, PropertyType.NEW_BUILDING);      
-      // use eager menu updating to get rid of bad request error from TG
-      // error happens because of menu updating twice for message and for by ctx.menu.update
-      await ctx.menu.update({immediate: true });
-      editFilterTextOnMenuClick(ctx, userSession, propertyMenu);
-    }
-  )
-  .text(
-    async (ctx) => {
-      let userSession = await getUserSession(ctx);
-      return buildCheckedMenu(
-        Constants.APARTMENT,
-        userSession.propertyType,
-        PropertyType.APARTMENT
-      );
-    },
-    async (ctx) => {
-      let userSession = await getUserSession(ctx);
-      togglePropertyFlag(userSession, PropertyType.APARTMENT);
-      await ctx.menu.update({immediate: true });
-      editFilterTextOnMenuClick(ctx, userSession, propertyMenu);
-    }
-  )
-  .row()
-  .text(
-    async (ctx) => {
-      let userSession = await getUserSession(ctx);
-      return buildCheckedMenu(
-        Constants.HOUSE,
-        userSession.propertyType,
-        PropertyType.HOUSE
-      );
-    },
-    async (ctx) => {
-      let userSession = await getUserSession(ctx);
-      togglePropertyFlag(userSession, PropertyType.HOUSE);
-      await ctx.menu.update({immediate: true });
-      editFilterTextOnMenuClick(ctx, userSession, propertyMenu);
-    }
-  )
-  .text(
-    async (ctx) => {
-      let userSession = await getUserSession(ctx);
-      return buildCheckedMenu(
-        Constants.LAND,
-        userSession.propertyType,
-        PropertyType.LAND
-      );
-    },
-    async (ctx) => {
-      let userSession = await getUserSession(ctx);
-      togglePropertyFlag(userSession, PropertyType.LAND);
-      await ctx.menu.update({immediate: true });
-      editFilterTextOnMenuClick(ctx, userSession, propertyMenu);
-    }
-  )
-  .row()
-  .text(
-    async (ctx) => {
-      let userSession = await getUserSession(ctx);
-      return buildCheckedMenu(
-        Constants.COMMERCIAL,
-        userSession.propertyType,
-        PropertyType.COMMERCIAL
-      );
-    },
-    async (ctx) => {
-      let userSession = await getUserSession(ctx);
-      togglePropertyFlag(userSession, PropertyType.COMMERCIAL);
-      await ctx.menu.update({immediate: true });
-      editFilterTextOnMenuClick(ctx, userSession, propertyMenu);
-    }
-  )
-  .row()
-  .text(Constants.NEXT, async (ctx) => {
-    let userSession = await getUserSession(ctx);
+  addListener(bot: Bot<SessionContextFlavor, Api<RawApi>>): void {
+    bot.on("message:text").filter(
+      (ctx) => {
+        return [
+          Constants.NEW_BUILDING,
+          Constants.APARTMENT,
+          Constants.HOUSE,
+          Constants.LAND,
+          Constants.COMMERCIAL,
+          addChecked(Constants.NEW_BUILDING),
+          addChecked(Constants.APARTMENT),
+          addChecked(Constants.HOUSE),
+          addChecked(Constants.LAND),
+          addChecked(Constants.COMMERCIAL),
+        ].includes(ctx.message.text);
+      },
+      async (ctx) => {
+        let userSession = await getUserSession(ctx);
+        userSession.menuStep = MenuStep.PROPERTY;
 
-    if (
-      EnumHelper.hasApartmentsEnabled(userSession.propertyType)
-    ) {
-      ctx.menu.nav(ROOM_MENU);
-    } else {
-      ctx.menu.nav(PRICE_MENU);
-    }
-  });
+        let NEW_BUILDING_CHECKED = addChecked(Constants.NEW_BUILDING);
+        let APARTMENT_CHECKED = addChecked(Constants.APARTMENT);
+        let HOUSE_CHECKED = addChecked(Constants.HOUSE);
+        let LAND_CHECKED = addChecked(Constants.LAND);
+        let COMMERCIAL_CHECKED = addChecked(Constants.COMMERCIAL);
+
+        switch (ctx.message.text) {
+          case Constants.NEW_BUILDING:
+          case NEW_BUILDING_CHECKED:
+            togglePropertyFlag(userSession, PropertyType.NEW_BUILDING);
+            break;
+          case Constants.APARTMENT:
+          case APARTMENT_CHECKED:
+            togglePropertyFlag(userSession, PropertyType.APARTMENT);
+            break;
+          case Constants.HOUSE:
+          case HOUSE_CHECKED:
+            togglePropertyFlag(userSession, PropertyType.HOUSE);
+            break;
+          case Constants.LAND:
+          case LAND_CHECKED:
+            togglePropertyFlag(userSession, PropertyType.LAND);
+            break;
+          case Constants.COMMERCIAL:
+          case COMMERCIAL_CHECKED:
+            togglePropertyFlag(userSession, PropertyType.COMMERCIAL);
+            break;
+        }
+
+        this.sendMenu(ctx, this.getMenu(userSession));
+      }
+    );
+  }
+}

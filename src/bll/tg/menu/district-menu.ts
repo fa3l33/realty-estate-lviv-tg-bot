@@ -1,114 +1,124 @@
-import { Menu } from "@grammyjs/menu";
-import { DistrictType } from "../../../dal/enums/disctrict-type";
-import { getUserSession } from "../session-context";
-import {
-  buildCheckedMenu,
-  toggleDistrictFlag,
-  DISTRICT_MENU,
-  editFilterTextOnMenuClick,
-  PRICE_MENU,
-} from "./menu-helper";
-import Constants from "../constants";
+import { MenuStep } from './../../../dal/enums/menu-step-type';
+import { DistrictType } from './../../../dal/enums/disctrict-type';
+import { Api, Bot, RawApi, Keyboard } from 'grammy';
+import BotSession from "../../../dal/interfaces/bot-session.interface";
+import Constants from '../constants';
+import { buildCheckedMenu, toggleDistrictFlag } from './menu-helper';
+import IMenu from './menu.interface';
+import { getUserSession, SessionContextFlavor } from '../session-context';
+import { addChecked } from '../../emoji';
+import Menu from './Menu';
 
-export const districtMenu: Menu = new Menu(DISTRICT_MENU)
-  .text(
-    async (ctx) => {
-      let userSession = await getUserSession(ctx);
-      return buildCheckedMenu(
+export class DistrictMenu extends Menu implements IMenu {
+  getMenu(userSession: BotSession): Keyboard {
+    return new Keyboard()
+    .text(
+      buildCheckedMenu(
         Constants.TAVRICHESK,
         userSession.districtType,
         DistrictType.TAVRICHESK
-      );
-    },
-    async (ctx) => {
-      let userSession = await getUserSession(ctx);
-      toggleDistrictFlag(userSession, DistrictType.TAVRICHESK);      
-      await ctx.menu.update({immediate: true});
-      editFilterTextOnMenuClick(ctx, userSession, districtMenu);
-    }
-  )
-  .text(
-    async (ctx) => {
-      let userSession = await getUserSession(ctx);
-      return buildCheckedMenu(
-        Constants.ZHILPOSELOK,
-        userSession.districtType,
-        DistrictType.ZHILPOSELOK
-      );
-    },
-    async (ctx) => {
-      let userSession = await getUserSession(ctx);
-      toggleDistrictFlag(userSession, DistrictType.ZHILPOSELOK);
-      await ctx.menu.update({immediate: true});
-      editFilterTextOnMenuClick(ctx, userSession, districtMenu);
-    }
-  )
-  .row()
-  .text(
-    async (ctx) => {
-      let userSession = await getUserSession(ctx);
-      return buildCheckedMenu(
-        Constants.SHUMENSKIY,
-        userSession.districtType,
-        DistrictType.SHUMENSKIY
-      );
-    },
-    async (ctx) => {
-      let userSession = await getUserSession(ctx);
-      toggleDistrictFlag(userSession, DistrictType.SHUMENSKIY);
-      await ctx.menu.update({immediate: true});
-      editFilterTextOnMenuClick(ctx, userSession, districtMenu);
-    }
-  )
-  .text(
-    async (ctx) => {
-      let userSession = await getUserSession(ctx);
-      return buildCheckedMenu(
+      )
+    )
+    .text(
+      buildCheckedMenu(
         Constants.CENTER,
         userSession.districtType,
         DistrictType.CENTER
-      );
-    },
-    async (ctx) => {
-      let userSession = await getUserSession(ctx);
-      toggleDistrictFlag(userSession, DistrictType.CENTER);
-      await ctx.menu.update({immediate: true});
-      editFilterTextOnMenuClick(ctx, userSession, districtMenu);
-    }
-  )
-  .row()
-  .text(
-    async (ctx) => {
-      let userSession = await getUserSession(ctx);
-      return buildCheckedMenu(
+      )
+    )
+    .row()
+    .text(
+      buildCheckedMenu(
+        Constants.ZHILPOSELOK,
+        userSession.districtType,
+        DistrictType.ZHILPOSELOK
+      )
+    )
+    .text(
+      buildCheckedMenu(
         Constants.OSTROV,
         userSession.districtType,
         DistrictType.OSTROV
-      );
-    },
-    async (ctx) => {
-      let userSession = await getUserSession(ctx);
-      toggleDistrictFlag(userSession, DistrictType.OSTROV);
-      await ctx.menu.update({immediate: true});
-      editFilterTextOnMenuClick(ctx, userSession, districtMenu);
-    }
-  )
-  .text(
-    async (ctx) => {
-      let userSession = await getUserSession(ctx);
-      return buildCheckedMenu(Constants.HBK, userSession.districtType, DistrictType.HBK);
-    },
-    async (ctx) => {
-      let userSession = await getUserSession(ctx);
-      toggleDistrictFlag(userSession, DistrictType.HBK);
-      await ctx.menu.update({immediate: true});
-      editFilterTextOnMenuClick(ctx, userSession, districtMenu);
-    }
-  )
-  .row()
-  .back(Constants.BACK, async (ctx) => {
-      ctx.menu.nav(PRICE_MENU);
-  })
-  .text(Constants.READY, (ctx) => {
-    ctx.menu.close();
-  });
+      )
+    )
+    .row()
+    .text(
+      buildCheckedMenu(
+        Constants.SHUMENSKIY,
+        userSession.districtType,
+        DistrictType.SHUMENSKIY
+      )
+    )
+    .text(
+      buildCheckedMenu(
+        Constants.HBK,
+        userSession.districtType,
+        DistrictType.HBK
+      )
+    )
+    .row()
+    .text(Constants.BACK)
+    .text(Constants.READY);
+  }
+
+  addListener(bot: Bot<SessionContextFlavor, Api<RawApi>>): void{
+    bot.on("message:text").filter(
+      (ctx) => {
+        return [
+          Constants.TAVRICHESK,
+          Constants.CENTER,
+          Constants.ZHILPOSELOK,
+          Constants.OSTROV,
+          Constants.SHUMENSKIY,
+          Constants.HBK,
+          addChecked(Constants.TAVRICHESK),
+          addChecked(Constants.CENTER),
+          addChecked(Constants.ZHILPOSELOK),
+          addChecked(Constants.OSTROV),
+          addChecked(Constants.SHUMENSKIY),
+          addChecked(Constants.HBK),
+        ].includes(ctx.message.text);
+      },
+      async (ctx) => {
+        let userSession = await getUserSession(ctx);
+        userSession.menuStep = MenuStep.DISTRICT;
+  
+        let TAVRICHESK_CHECKED = addChecked(Constants.TAVRICHESK);
+        let CENTER_CHECKED = addChecked(Constants.CENTER);
+        let ZHILPOSELOK_CHECKED = addChecked(Constants.ZHILPOSELOK);
+        let OSTROV_CHECKED = addChecked(Constants.OSTROV);
+        let SHUMENSKIY_CHECKED = addChecked(Constants.SHUMENSKIY);
+        let HBK_CHECKED = addChecked(Constants.HBK);
+  
+        switch (ctx.message.text) {
+          case Constants.TAVRICHESK:
+          case TAVRICHESK_CHECKED:
+            toggleDistrictFlag(userSession, DistrictType.TAVRICHESK);
+            break;
+          case Constants.CENTER:
+          case CENTER_CHECKED:
+            toggleDistrictFlag(userSession, DistrictType.CENTER);
+            break;
+          case Constants.ZHILPOSELOK:
+          case ZHILPOSELOK_CHECKED:
+            toggleDistrictFlag(userSession, DistrictType.ZHILPOSELOK);
+            break;
+          case Constants.OSTROV:
+          case OSTROV_CHECKED:
+            toggleDistrictFlag(userSession, DistrictType.OSTROV);
+            break;
+          case Constants.SHUMENSKIY:
+          case SHUMENSKIY_CHECKED:
+            toggleDistrictFlag(userSession, DistrictType.SHUMENSKIY);
+            break;
+          case Constants.HBK:
+          case HBK_CHECKED:
+            toggleDistrictFlag(userSession, DistrictType.HBK);
+            break;
+        }
+  
+        this.sendMenu(ctx, this.getMenu(userSession));
+      }
+    );  
+  }
+}
