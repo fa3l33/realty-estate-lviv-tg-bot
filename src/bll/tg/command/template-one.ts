@@ -45,7 +45,7 @@ export async function templateOne(ctx: SessionContextFlavor) {
       });
 
       if (item) {
-        ctx.reply(MessageBuilder.buildMessage(item), {
+        ctx.reply(MessageBuilder.buildItemInfo(item), {
           parse_mode: "HTML",
           reply_markup: new InlineKeyboard().text(
             "Дізнатись більше у менеджера",
