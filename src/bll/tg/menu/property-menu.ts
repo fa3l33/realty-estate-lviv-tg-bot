@@ -1,5 +1,5 @@
-import { MenuStep } from "./../../../dal/enums/menu-step-type";
-import { PropertyType } from "./../../../dal/enums/property-type";
+import { MenuStep } from './../../../dal/enums/tg/menu-step-type';
+import { PropertyType } from './../../../dal/enums/tg/property-type';
 import { Api, Bot, Keyboard, RawApi } from "grammy";
 import BotSession from "../../../dal/interfaces/bot-session.interface";
 import Constants from "../constants";

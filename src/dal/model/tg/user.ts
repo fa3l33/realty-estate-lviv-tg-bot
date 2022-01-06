@@ -1,14 +1,14 @@
-import { ApartmentPriceType } from './../../enums/apartment-price-type';
-import { PriceType } from './../../enums/price-type';
-import { DistrictType } from './../../enums/disctrict-type';
-import { RoomType } from './../../enums/room-type';
-import { PropertyType } from './../../enums/property-type';
+import { MenuStep } from './../../enums/tg/menu-step-type';
+import { PriceType } from './../../enums/tg/price-type';
+import { DistrictType } from '../../enums/tg/district-type';
+import { RoomType } from './../../enums/tg/room-type';
+import { PropertyType } from './../../enums/tg/property-type';
+import { ApartmentPriceType } from '../../enums/tg/apartment-price-type';
 import {
   Entity,
   Column,
   PrimaryColumn
 } from 'typeorm';
-import { MenuStep } from '../../enums/menu-step-type';
 
 @Entity('tg_user')
 export class User {

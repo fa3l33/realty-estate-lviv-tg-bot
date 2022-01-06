@@ -1,14 +1,14 @@
+import { PriceType } from './../../../dal/enums/tg/price-type';
+import { DistrictType } from './../../../dal/enums/tg/district-type';
+import { RoomType } from './../../../dal/enums/tg/room-type';
+import { PropertyType } from './../../../dal/enums/tg/property-type';
 import { Menu } from "@grammyjs/menu";
 import { Context } from "grammy";
-import { DistrictType } from "../../../dal/enums/disctrict-type";
-import { PropertyType } from "../../../dal/enums/property-type";
-import { RoomType } from "../../../dal/enums/room-type";
 import BotSession from "../../../dal/interfaces/bot-session.interface";
 import { hasFlag, toggleFlag } from "../../../common/enum-utils";
 import { addChecked } from "../../emoji";
 import { MessageBuilder } from "../message-builder";
-import { PriceType } from "../../../dal/enums/price-type";
-import { ApartmentPriceType } from "../../../dal/enums/apartment-price-type";
+import { ApartmentPriceType } from "../../../dal/enums/tg/apartment-price-type";
 
 export const PROPERTY_MENU = "PROPERTY-MENU";
 export const ROOM_MENU = "ROOM-MENU";

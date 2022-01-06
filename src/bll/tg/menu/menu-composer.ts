@@ -1,4 +1,4 @@
-import { MenuStep } from './../../../dal/enums/menu-step-type';
+import { MenuStep } from './../../../dal/enums/tg/menu-step-type';
 import { DistrictMenu } from './district-menu';
 import { Api, Bot, Keyboard, RawApi } from "grammy";
 import { getUserSession, SessionContextFlavor } from "./../session-context";

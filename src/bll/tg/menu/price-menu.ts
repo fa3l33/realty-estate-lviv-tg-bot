@@ -1,6 +1,6 @@
-import { MenuStep } from './../../../dal/enums/menu-step-type';
-import { ApartmentPriceType } from "./../../../dal/enums/apartment-price-type";
-import { PriceType } from "./../../../dal/enums/price-type";
+import { MenuStep } from './../../../dal/enums/tg/menu-step-type';
+import { PriceType } from './../../../dal/enums/tg/price-type';
+import { ApartmentPriceType } from "../../../dal/enums/tg/apartment-price-type";
 import { Api, Bot, Keyboard, RawApi } from "grammy";
 import BotSession from "../../../dal/interfaces/bot-session.interface";
 import EnumHelper from "../../enum-helper";
