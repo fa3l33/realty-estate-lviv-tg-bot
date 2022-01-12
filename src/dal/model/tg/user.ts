@@ -1,20 +1,16 @@
-import { MenuStep } from './../../enums/tg/menu-step-type';
-import { PriceType } from './../../enums/tg/price-type';
-import { DistrictType } from '../../enums/tg/district-type';
-import { RoomType } from './../../enums/tg/room-type';
-import { PropertyType } from './../../enums/tg/property-type';
-import { ApartmentPriceType } from '../../enums/tg/apartment-price-type';
-import {
-  Entity,
-  Column,
-  PrimaryColumn
-} from 'typeorm';
+import { MenuStep } from "./../../enums/tg/menu-step-type";
+import { PriceType } from "./../../enums/tg/price-type";
+import { DistrictType } from "../../enums/tg/district-type";
+import { RoomType } from "./../../enums/tg/room-type";
+import { PropertyType } from "./../../enums/tg/property-type";
+import { ApartmentPriceType } from "../../enums/tg/apartment-price-type";
+import { Entity, Column, PrimaryColumn } from "typeorm";
 
-@Entity('tg_user')
+@Entity("tg_user")
 export class User {
   /** Unique identifier for this user or bot. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier. */
   @PrimaryColumn({
-    unique: true
+    unique: true,
   })
   id!: number;
   /** True, if this user is a bot */
@@ -24,14 +20,14 @@ export class User {
   @Column()
   firstName!: string;
   /** User's or bot's last name */
-  @Column()
+  @Column({ nullable: true })
   lastName?: string;
   /** User's or bot's username */
   @Column()
   username?: string;
   @Column({
     nullable: true,
-    default: null
+    default: null,
   })
   phoneNumber?: string;
   @Column({
@@ -39,27 +35,27 @@ export class User {
   })
   chatId!: number;
   @Column({
-    type: 'smallint',
+    type: "smallint",
   })
   propertyType!: PropertyType;
   @Column({
-    type: 'smallint',
+    type: "smallint",
   })
   roomType!: RoomType;
   @Column({
-    type: 'smallint',
+    type: "smallint",
   })
   districtType!: DistrictType;
   @Column({
-    type: 'smallint',
+    type: "smallint",
   })
   priceType!: PriceType;
   @Column({
-    type: 'smallint',
+    type: "smallint",
   })
   apartmentPriceType!: ApartmentPriceType;
   @Column({
-    type: 'smallint',
+    type: "smallint",
   })
   menuStep!: MenuStep;
   // determine if user wants to receive updates
@@ -74,7 +70,12 @@ export class User {
   // last notification send date
   @Column({
     nullable: true,
-    default: null
+    default: null,
   })
   notifiedAtTS?: Date;
+  @Column({
+    nullable: true,
+    default: null,
+  })
+  interestedInItemId?: number;
 }
