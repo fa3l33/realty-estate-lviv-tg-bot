@@ -30,6 +30,21 @@ export default abstract class Constants {
     FROM_45_TO_60: "Від $45 тис. до $60 тис.",
     FROM_60_AND_MORE: "Від $60 тис. і більше",
   };
+
+  public static readonly CALL_ME = "Зателефонуйте мені";
+  public static readonly MESSAGE_ME = "Напишіть мені";
+
+  public static readonly PREFIX = {
+    DETAILS: "details",
+    MANAGER: "manager",
+  }
+
+  public static readonly DELIMITER = "-";
+  public static readonly REGEX = {
+    ITEM_DETAILS: `(${this.PREFIX.DETAILS}${this.DELIMITER}\\d+${this.DELIMITER}\\d+)`,
+    MANAGER_CONNECTION: `(${this.PREFIX.MANAGER}${this.DELIMITER}\\d+${this.DELIMITER}\\d+)`,
+    CONTACT_BY_PHONE_OR_MESSAGE: `${this.CALL_ME}|${this.MESSAGE_ME}`,
+  }
 }
 
 interface Prices {
