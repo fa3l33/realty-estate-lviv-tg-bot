@@ -36,6 +36,7 @@ export default class ItemFilterService implements IItemFilterService {
       )
         return true;
 
+      // if apartment selected include new buildings
       if (
         hasFlag(propertyType, PropertyType.APARTMENT) &&
         item.categories.find((ct) => ct.id === 30 || ct.id === 6)

@@ -1,17 +1,28 @@
 import { Repository, getRepository } from 'typeorm';
 import { Item } from '../../../dal/model/rg_zoo/item';
 import { SessionContextFlavor } from '../../tg/session-context';
-import { Bot, InlineKeyboard } from 'grammy';
+import { Bot } from 'grammy';
 import IItemService from "./iitem.service";
 import { MessageBuilder } from '../../tg/message-builder';
+import IUserService from '../user/iuser.service';
+import logger from '../../logger';
+import MarkupManager from '../../tg/markup-manager';
 
 export default class ItemService implements IItemService {
   _bot: Bot<SessionContextFlavor>;
   _itemRepository: Repository<Item>;
+  _userService: IUserService;
 
-  constructor(bot: Bot<SessionContextFlavor>) {
+  constructor(bot: Bot<SessionContextFlavor>, userService: IUserService) {
     this._bot = bot;
     this._itemRepository = getRepository(Item);
+    this._userService = userService;
+  }
+
+  public async getById(id: number) : Promise<Item | undefined> {
+    return this._itemRepository.findOne(id, {
+      relations: ["categories"]
+    });
   }
 
   /**
@@ -38,11 +49,27 @@ export default class ItemService implements IItemService {
     this._bot.api.sendMessage(chatId,
       MessageBuilder.buildItemInfo(item), {
         parse_mode: "HTML",
-        reply_markup: new InlineKeyboard().text(
-          "Дізнатись більше у менеджера",
-          `${userId}-${item.id}`
-        ),
+        reply_markup: MarkupManager.getItemIK(userId, item.id),
         disable_web_page_preview: true,
       });
+  }
+
+  /**
+   * postDetailedItem
+   */
+  public async postDetailedItem(userId: number, itemId: number) : Promise<void> {
+    const user = await this._userService.getById(userId);
+    const item = await this.getById(itemId);
+
+    if (user && item) {
+      this._bot.api.sendMessage(user.chatId,
+        MessageBuilder.buildItemInfo(item, true), {
+          parse_mode: "HTML",
+          reply_markup: MarkupManager.getItemIK(userId, item.id),
+          disable_web_page_preview: true,
+        });
+    } else {
+      logger.error(`Unable to send detailed item information. Item or User does not exist. ItemId: ${itemId}, UserId: ${userId}`);
+    }
   }
 }
