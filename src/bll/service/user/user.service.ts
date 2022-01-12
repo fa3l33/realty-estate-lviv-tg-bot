@@ -9,10 +9,14 @@ export default class UserService implements IUserService {
     this._userRepository = getRepository(User);
   }
 
+    public async getById(id: number): Promise<User | undefined> {
+        return this._userRepository.findOne(id);
+    }
+
   /**
    * getActiveUsers
    */
-  public getActiveUsers(): Promise<User[]> {
+  public async getActiveUsers(): Promise<User[]> {
     return this._userRepository.find({
       isActive: true,
     });
