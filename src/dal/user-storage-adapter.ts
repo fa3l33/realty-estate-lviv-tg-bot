@@ -1,5 +1,6 @@
 import { StorageAdapter } from 'grammy';
 import { Repository } from 'typeorm';
+import logger from '../bll/logger';
 import BotSession from './interfaces/bot-session.interface';
 import { User } from './model/tg/user';
 
@@ -11,13 +12,15 @@ export class TypeOrmAdapter implements StorageAdapter<BotSession> {
   }
 
   async read(key: string) :  Promise<BotSession | undefined> {
-      var test = await this.repository.findOne(key);
-      console.log(test);
     return this.repository.findOne(key);
   }
 
   async write(key: string, value: User) : Promise<void> {
-      this.repository.save(value);
+    try {
+      await this.repository.save(value);
+    } catch (error) {
+      logger.error(error, 'User data cannot be saved.');
+    } 
   }
 
   async delete(key: string) : Promise<void> {
