@@ -7,6 +7,7 @@ import { CategoryHelper } from "../category-helper";
 import { ItemElementType } from "../../dal/enums/tg/item-elemnt-type";
 import ElementParser from "../elemens-parser";
 import logger from "../logger";
+import dayjs = require("dayjs");
 
 export abstract class MessageBuilder {
   public static buildItemInfo(
@@ -113,6 +114,25 @@ export abstract class MessageBuilder {
     )} ${EnumHelper.districtEnumToString(userSession.districtType)}\n`;
 
     return filter;
+  }
+
+  public static buildConnectionResponse(isPhoneResponse: boolean = false) : string {
+    const hour = dayjs().hour();
+    const shouldContactToday = hour >= 9 && hour < 16;
+
+    if (isPhoneResponse) {
+      if (shouldContactToday) {
+        return "Ми зателефонуємо Вам найближчим часом протягом 1 години.";
+      } else {
+        return "Ми зателефонуємо Вам завтра з 9 години.";
+      }
+    } else {
+      if (shouldContactToday) {
+        return "Наш менеджер надішле Вам приватне повідомлення протягом 1 години.";
+      } else {
+        return "Наш менеджер надішле Вам завтра приватне повідомлення.";
+      }
+    }
   }
 
   private static getPropertyType(item: Item): string {
