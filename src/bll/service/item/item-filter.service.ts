@@ -1,17 +1,28 @@
-import { DistrictType } from "../../dal/enums/disctrict-type";
-import { ApartmentPriceType } from "../../dal/enums/apartment-price-type";
-import { PriceType } from "../../dal/enums/price-type";
-import { ItemElementMap } from "../../dal/item-element-map";
-import { RoomType } from "../../dal/enums/room-type";
-import { PropertyType } from "../../dal/enums/property-type";
-import { Item } from "../../dal/model/rg_zoo/item";
-import { hasFlag } from "../../common/enum-utils";
-import { User } from "../../dal/model/tg/user";
-import EnumHelper from "../enum-helper";
-import { ItemElementType } from "../../dal/enums/item-elemnt-type";
-import IItemFilter from "./item-filter.interface";
+import { DealType } from '../../../dal/enums/rg_zoo/deal-type';
+import { PriceType } from '../../../dal/enums/tg/price-type';
+import { DistrictType } from '../../../dal/enums/tg/district-type';
+import { RoomType } from '../../../dal/enums/tg/room-type';
+import { PropertyType } from '../../../dal/enums/tg/property-type';
+import { ApartmentPriceType } from "../../../dal/enums/tg/apartment-price-type";
+import { Item } from "../../../dal/model/rg_zoo/item";
+import { hasFlag } from "../../../common/enum-utils";
+import { User } from "../../../dal/model/tg/user";
+import EnumHelper from "../../enum-helper";
+import IItemFilterService from "./iitem-filter.service";
+import { ItemElementType } from "../../../dal/enums/tg/item-elemnt-type";
+import ElementParser from '../../elemens-parser';
 
-export default class ItemFilterService implements IItemFilter {
+export default class ItemFilterService implements IItemFilterService {
+  byType(item: Item): boolean {
+    const itemType = ElementParser.getOption(item.elements, ItemElementType.TYPE);
+
+    if (itemType) {
+      return itemType === DealType.SELL;
+    }
+
+    return true;
+  }
+
   byProperty(user: User) {
     const propertyType = user.propertyType;
 
@@ -25,6 +36,7 @@ export default class ItemFilterService implements IItemFilter {
       )
         return true;
 
+      // if apartment selected include new buildings
       if (
         hasFlag(propertyType, PropertyType.APARTMENT) &&
         item.categories.find((ct) => ct.id === 30 || ct.id === 6)
@@ -58,9 +70,7 @@ export default class ItemFilterService implements IItemFilter {
     let selectedRooms: Array<number> = [];
 
     return function (item: Item): boolean {
-      let values: any = (item.elements as any)[
-        ItemElementMap.get(ItemElementType.ROOMS_COUNT)!
-      ];
+      let roomsCount = ElementParser.getOption(item.elements, ItemElementType.ROOMS_COUNT);
 
       // if apartments not selected return all items
       if (!EnumHelper.hasApartmentsEnabled(user.propertyType)) return true;
@@ -68,9 +78,7 @@ export default class ItemFilterService implements IItemFilter {
       // nothing selected
       if (roomType === RoomType.NONE) return true;
 
-      if (values && values[0] && values[0]["value"]) {
-        const roomsCount = values[0]["value"] as number;
-
+      if (roomsCount) {
         if (hasFlag(roomType, RoomType.ONE)) selectedRooms.push(1);
 
         if (hasFlag(roomType, RoomType.TWO)) selectedRooms.push(2);
@@ -85,7 +93,7 @@ export default class ItemFilterService implements IItemFilter {
           selectedRooms.push(8);
         }
 
-        if (selectedRooms.includes(roomsCount)) return true;
+        if (selectedRooms.includes(Number(roomsCount))) return true;
 
         return false;
       } else {
@@ -98,17 +106,13 @@ export default class ItemFilterService implements IItemFilter {
     const self = this;
 
     return function (item: Item): boolean {
-      let values: any = (item.elements as any)[
-        ItemElementMap.get(ItemElementType.PRICE_USD)!
-      ];
+      let price = ElementParser.getOption(item.elements, ItemElementType.PRICE_USD);
 
-      if (values && values[0] && values[0]["value"]) {
-        let price = values[0]["value"] as number;
-
+      if (price) {
         if (EnumHelper.hasNonApartmentEnabled(user.propertyType)) {
-          return self.filterByPrice(user.priceType, price);
+          return self.filterByPrice(user.priceType, Number(price));
         } else {
-          return self.filterByApartmentPrice(user.apartmentPriceType, price);
+          return self.filterByApartmentPrice(user.apartmentPriceType, Number(price));
         }
       } else {
         return true;
@@ -120,13 +124,9 @@ export default class ItemFilterService implements IItemFilter {
     const districtType = user.districtType;
 
     return function (item: Item): boolean {
-      let values: any = (item.elements as any)[
-        ItemElementMap.get(ItemElementType.DISTRICT)!
-      ];
+      let district = ElementParser.getOption(item.elements, ItemElementType.DISTRICT);
 
-      if (values && values[0] && values[0]["value"]) {
-        let district = values[0]["value"] as string;
-
+      if (district) {
         if (districtType === DistrictType.NONE) return true;
 
         if (

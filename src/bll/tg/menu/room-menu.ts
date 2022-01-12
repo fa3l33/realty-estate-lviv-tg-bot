@@ -1,6 +1,6 @@
-import { MenuStep } from './../../../dal/enums/menu-step-type';
+import { MenuStep } from './../../../dal/enums/tg/menu-step-type';
+import { RoomType } from './../../../dal/enums/tg/room-type';
 import { Api, Bot, Keyboard, RawApi } from 'grammy';
-import { RoomType } from './../../../dal/enums/room-type';
 import Constants from "../constants";
 import { buildCheckedMenu, toggleRoomFlag } from './menu-helper';
 import BotSession from '../../../dal/interfaces/bot-session.interface';

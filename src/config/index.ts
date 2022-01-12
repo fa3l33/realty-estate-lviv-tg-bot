@@ -10,6 +10,7 @@ export default {
         SITE_URL: process.env.RG_SITE_URL,
         ITEM_URL: process.env.RG_ITEM_URL,
         MANAGER_PHONE: process.env.RG_MANAGER_PHONE,
+        PHOTOS_URL: process.env.RG_PHOTOS_URL
     },
     isProduction: process.env.IS_PRODUCTION,
     db_type: process.env.DB_TYPE,

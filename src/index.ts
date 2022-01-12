@@ -1,15 +1,22 @@
 import "reflect-metadata";
 import config from "./config";
-import { Bot, Keyboard, lazySession } from "grammy";
+import { Bot, lazySession } from "grammy";
 import { getRepository } from "typeorm";
 import { initialize, SessionContextFlavor } from "./bll/tg/session-context";
 import { User } from "./dal/model/tg/user";
 import { TypeOrmAdapter } from "./dal/user-storage-adapter";
 import initializeDataBase from "./db-initializer";
 import CommandHelper from "./bll/tg/command/command-helper";
-import ItemNotificationService from "./bll/service/jobs/item-notification.service";
-import ItemFilterService from "./bll/service/item-filter.service";
-import IItemNotificationService from "./bll/service/jobs/item-notification.interface";
+import NotificationJob from "./bll/service/jobs/notification.job";
+import ItemFilterService from "./bll/service/item/item-filter.service";
+import INotificationJob from "./bll/service/jobs/inotification.job";
+import UserService from "./bll/service/user/user.service";
+import ItemService from "./bll/service/item/item.service";
+import Constants from "./bll/tg/constants";
+import ItemDetailsMiddleware from "./bll/middleware/item-details.middleware";
+import ManagerConnectionMiddleware from "./bll/middleware/manager-connection.middleware";
+import ConnectionMiddleware from "./bll/middleware/connection.middleware";
+import ContactMiddleware from "./bll/middleware/contact.middleware";
  
 async function bootstrap() {
     // create global MySql connection
@@ -27,34 +34,33 @@ async function bootstrap() {
     );
 
     CommandHelper.init(bot);
-    const itemNotificationService: IItemNotificationService = new ItemNotificationService(bot, new ItemFilterService());
+    const userService = new UserService();
+    const itemService = new ItemService(bot, userService);
+    const itemDetailsMiddleware = new ItemDetailsMiddleware(itemService);
+    const managerConnectionMiddleware = new ManagerConnectionMiddleware();
+    const connectionMiddleware = new ConnectionMiddleware();
+    const contactMiddleware = new ContactMiddleware();
+
+    const itemNotificationService: INotificationJob = new NotificationJob(
+      userService,
+      new ItemFilterService(),
+      itemService
+    );
     itemNotificationService.start();
 
-    bot.on("message:contact", (ctx) => {
-      ctx.reply("thx", {
-        reply_markup: { remove_keyboard: true },
-      });
-    });
+    bot.on("message:contact").use(contactMiddleware);
 
-    bot.on("callback_query:data", (ctx) => {
-      ctx.answerCallbackQuery();
+    bot.on("callback_query:data").filter((ctx) => {
+      return new RegExp(Constants.REGEX.ITEM_DETAILS).test(ctx.callbackQuery.data);
+    }).use(itemDetailsMiddleware);
 
-      ctx.reply(`Оберіть спосіб для зворотнього зв'язку.`, {
-        reply_markup: {
-          one_time_keyboard: true,
-          keyboard: new Keyboard()
-            .requestContact(
-              "Зателефонуйте мені\n (поділитися номером телефону)"
-            )
-            .row()
-            .text("Напишіть мені.")
-            .build(),
-          resize_keyboard: true,
-          selective: true,
-          input_field_placeholder: `Оберіть спосіб для зворотнього зв'язку.`,
-        },
-      });
-    });
+    bot.on("callback_query:data").filter((ctx) => {
+      return new RegExp(Constants.REGEX.MANAGER_CONNECTION).test(ctx.callbackQuery.data);
+    }).use(managerConnectionMiddleware);
+
+    bot.on(":text").filter((ctx) => {
+      return new RegExp(Constants.REGEX.CONTACT_BY_PHONE_OR_MESSAGE).test(ctx.message!.text);
+    }).use(connectionMiddleware);
 
     bot.catch((value) => {
       console.log(value);

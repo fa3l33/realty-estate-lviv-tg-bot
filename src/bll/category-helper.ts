@@ -1,4 +1,4 @@
-import { PropertyType } from "../dal/enums/property-type";
+import { PropertyType } from './../dal/enums/tg/property-type';
 import EnumHelper from "./enum-helper";
 
 export abstract class CategoryHelper {

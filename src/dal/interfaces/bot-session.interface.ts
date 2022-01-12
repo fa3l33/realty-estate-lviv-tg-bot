@@ -1,5 +1,5 @@
-import { Session } from './session.interface';
-import { User } from './user.interface';
+import { Session } from './isession';
+import { User } from './iuser';
 
 /**
  * 

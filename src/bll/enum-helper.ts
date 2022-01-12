@@ -1,9 +1,9 @@
-import { ApartmentPriceType } from './../dal/enums/apartment-price-type';
-import { PriceType } from './../dal/enums/price-type';
+import { DistrictType } from './../dal/enums/tg/district-type';
+import { PriceType } from './../dal/enums/tg/price-type';
+import { RoomType } from './../dal/enums/tg/room-type';
+import { PropertyType } from './../dal/enums/tg/property-type';
+import { ApartmentPriceType } from '../dal/enums/tg/apartment-price-type';
 import { hasFlag } from "../common/enum-utils";
-import { DistrictType } from "../dal/enums/disctrict-type";
-import { PropertyType } from "../dal/enums/property-type";
-import { RoomType } from "../dal/enums/room-type";
 import Constants from "./tg/constants";
 
 export default abstract class EnumHelper {

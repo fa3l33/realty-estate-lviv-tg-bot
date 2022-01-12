@@ -1,5 +1,5 @@
-import { MenuStep } from './../../../dal/enums/menu-step-type';
-import { DistrictType } from './../../../dal/enums/disctrict-type';
+import { MenuStep } from './../../../dal/enums/tg/menu-step-type';
+import { DistrictType } from './../../../dal/enums/tg/district-type';
 import { Api, Bot, RawApi, Keyboard } from 'grammy';
 import BotSession from "../../../dal/interfaces/bot-session.interface";
 import Constants from '../constants';

@@ -1,11 +1,11 @@
+import { MenuStep } from './../../dal/enums/tg/menu-step-type';
+import { PriceType } from './../../dal/enums/tg/price-type';
+import { DistrictType } from '../../dal/enums/tg/district-type';
+import { RoomType } from './../../dal/enums/tg/room-type';
+import { PropertyType } from './../../dal/enums/tg/property-type';
 import { Context, LazySessionFlavor } from 'grammy';
 import { Chat, User } from 'grammy/out/platform.node';
-import { ApartmentPriceType } from '../../dal/enums/apartment-price-type';
-import { DistrictType } from '../../dal/enums/disctrict-type';
-import { MenuStep } from '../../dal/enums/menu-step-type';
-import { PriceType } from '../../dal/enums/price-type';
-import { PropertyType } from '../../dal/enums/property-type';
-import { RoomType } from '../../dal/enums/room-type';
+import { ApartmentPriceType } from '../../dal/enums/tg/apartment-price-type';
 import BotSession from '../../dal/interfaces/bot-session.interface';
 
 export function initialize(): BotSession {

@@ -12,4 +12,5 @@ export interface User {
   username?: string;
   phoneNumber?: string;
   chatId: number;
+  interestedInItemId?: number;
 }
