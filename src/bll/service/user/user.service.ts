@@ -1,5 +1,5 @@
-import { getRepository, Repository } from 'typeorm';
-import { User } from '../../../dal/model/tg/user';
+import { getRepository, Repository } from "typeorm";
+import { User } from "../../../dal/model/tg/user";
 import IUserService from "./iuser.service";
 
 export default class UserService implements IUserService {
@@ -9,9 +9,13 @@ export default class UserService implements IUserService {
     this._userRepository = getRepository(User);
   }
 
-    public async getById(id: number): Promise<User | undefined> {
-        return this._userRepository.findOne(id);
-    }
+  public async getById(id: number): Promise<User | undefined> {
+    return this._userRepository.findOne(id);
+  }
+
+  public async getByPhone(phoneNumber: string): Promise<User | undefined> {
+    return this._userRepository.findOne({ phoneNumber: phoneNumber });
+  }
 
   /**
    * getActiveUsers

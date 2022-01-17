@@ -1,12 +1,12 @@
 import { Context, MiddlewareFn, MiddlewareObj, NextFunction } from "grammy";
-import ItemService from "../service/item/item.service";
+import IMessageService from "../service/imessage.service";
 import Constants from "../tg/constants";
 
 export default class ItemDetailsMiddleware implements MiddlewareObj{
-    _itemService: ItemService;
+    _messageService: IMessageService;
 
-    constructor(itemService: ItemService) {
-        this._itemService = itemService;
+    constructor(messageService: IMessageService) {
+        this._messageService = messageService;
     }
     middleware: () => MiddlewareFn<Context> = () => {
         return async (ctx: Context, next: NextFunction) => {
@@ -15,7 +15,7 @@ export default class ItemDetailsMiddleware implements MiddlewareObj{
             const userId = Number(itemData[1]);
             const itemId = Number(itemData[2]);
             
-            await this._itemService.postDetailedItem(userId, itemId);
+            await this._messageService.postDetailedItem(userId, itemId);
 
             await next();
         }

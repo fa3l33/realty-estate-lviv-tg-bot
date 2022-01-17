@@ -7,13 +7,16 @@ import IUserService from "../user/iuser.service";
 import IItemService from "../item/iitem.service";
 import ItemService from "../item/item.service";
 import * as dayjs from 'dayjs';
+import IMessageService from "../imessage.service";
 
 export default class NotificationJob implements INotificationJob {
-  _itemFilterService: IItemFilterService;
-  _itemService: IItemService;
-  _userService: IUserService;  
+  private _messageService: IMessageService;
+  private _itemFilterService: IItemFilterService;
+  private _itemService: IItemService;
+  private _userService: IUserService;  
 
-  constructor(userService: IUserService, itemFilterService: ItemFilterService, itemService: ItemService) {
+  constructor(messageService: IMessageService, userService: IUserService, itemFilterService: ItemFilterService, itemService: ItemService) {
+    this._messageService = messageService;
     this._itemFilterService = itemFilterService;
     this._itemService = itemService;
     this._userService = userService;
@@ -30,10 +33,11 @@ export default class NotificationJob implements INotificationJob {
 
   private async notify() {
     const users = await this._userService.getActiveUsers();
-    const items: Array<Item> = await this._itemService.getNotificationItems(dayjs('2021-12-01').unix());
+    const items: Array<Item> = await this._itemService.getNotificationItems(dayjs('2021-12-01').subtract(1, 'day').unix());
 
     users.forEach((user) => {
       const notifyItems = items
+        // TODO: filter by already sent items
         .filter(this._itemFilterService.byType)
         .filter(this._itemFilterService.byProperty(user))
         .filter(this._itemFilterService.byRoomsCount(user))
@@ -41,7 +45,7 @@ export default class NotificationJob implements INotificationJob {
         .filter(this._itemFilterService.byDistrict(user));
 
       notifyItems.forEach(item => { 
-        this._itemService.postItem(item, user.chatId, user.id);
+        this._messageService.postItem(item, user.chatId, user.id);
       });
     });
   }

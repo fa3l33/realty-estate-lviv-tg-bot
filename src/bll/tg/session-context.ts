@@ -14,6 +14,7 @@ export function initialize(): BotSession {
     isBot: false,
     firstName: '',
     lastName: undefined,
+    username: undefined,
     propertyType: PropertyType.NONE,
     roomType: RoomType.NONE,
     districtType: DistrictType.NONE,

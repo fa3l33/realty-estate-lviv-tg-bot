@@ -17,6 +17,7 @@ import ItemDetailsMiddleware from "./bll/middleware/item-details.middleware";
 import ManagerConnectionMiddleware from "./bll/middleware/manager-connection.middleware";
 import ConnectionMiddleware from "./bll/middleware/connection.middleware";
 import ContactMiddleware from "./bll/middleware/contact.middleware";
+import MessageService from "./bll/service/message.service";
  
 async function bootstrap() {
     // create global MySql connection
@@ -35,13 +36,15 @@ async function bootstrap() {
 
     CommandHelper.init(bot);
     const userService = new UserService();
-    const itemService = new ItemService(bot, userService);
-    const itemDetailsMiddleware = new ItemDetailsMiddleware(itemService);
+    const itemService = new ItemService();
+    const messageService = new MessageService(bot, userService, itemService);
+    const itemDetailsMiddleware = new ItemDetailsMiddleware(messageService);
     const managerConnectionMiddleware = new ManagerConnectionMiddleware();
-    const connectionMiddleware = new ConnectionMiddleware();
-    const contactMiddleware = new ContactMiddleware();
+    const connectionMiddleware = new ConnectionMiddleware(messageService);
+    const contactMiddleware = new ContactMiddleware(messageService);
 
     const itemNotificationService: INotificationJob = new NotificationJob(
+      messageService,
       userService,
       new ItemFilterService(),
       itemService
