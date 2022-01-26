@@ -42,8 +42,17 @@ export default class UserService implements IUserService {
 
   public async saveSeenItems(user: User, items: Item[]) : Promise<void> {
     if (user && items && items.length) {
-      user.items = items;
-      this._userRepository.save(user);
+      var rows = items.map(it => {
+        return { user_id: user.id, item_id: it.id };
+      });
+
+      this._userRepository
+        .createQueryBuilder('user_items')
+        .insert()
+        .into('tg_user_items_seen')
+        .values(rows)
+        .printSql()
+        .execute();
     } else {
       logger.error('Unable to find user by UserId: %UserId', user.id);
     }

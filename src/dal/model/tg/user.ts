@@ -82,10 +82,7 @@ export class User {
   interestedInItemId?: number;
   // allow insert only
   // tg_users -> rg_zoo_item
-  @ManyToMany(() => Item, item => item.users, {
-    cascade: ['insert'],
-    onDelete: 'CASCADE'
-  })
+  @ManyToMany(() => Item, item => item.users)
   @JoinTable({  
     name: 'tg_user_items_seen',
     joinColumn: {
