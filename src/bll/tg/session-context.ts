@@ -26,7 +26,8 @@ export function initialize(): BotSession {
     lastUpdateTS: new Date(),
     notifiedAtTS: undefined,
     phoneNumber: undefined,
-    chatId: 0
+    chatId: 0,
+    items: []
   };
 }
 

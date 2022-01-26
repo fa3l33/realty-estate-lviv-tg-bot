@@ -29,7 +29,7 @@ export default class ItemService implements IItemService {
         {
           filterDate: filterDateUnix,
           filterType: "realtyobject",
-          filterCategoryId: 24,
+          filterCategoryId: 24,   // site filter
         }
       )
       .getMany();

@@ -7,4 +7,5 @@ export default interface IItemFilterService {
     byRoomsCount(user: User) : (item: Item) => boolean;
     byPrice(user: User) : (item: Item) => boolean;
     byDistrict(user: User) : (item: Item) => boolean;
+    bySeenItems(user: User): (item: Item) => Promise<boolean>;
 }

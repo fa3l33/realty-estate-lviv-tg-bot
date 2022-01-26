@@ -11,8 +11,15 @@ import EnumHelper from "../../enum-helper";
 import IItemFilterService from "./iitem-filter.service";
 import { ItemElementType } from "../../../dal/enums/tg/item-elemnt-type";
 import ElementParser from '../../elemens-parser';
+import IUserService from '../user/iuser.service';
 
 export default class ItemFilterService implements IItemFilterService {
+  private readonly _userService: IUserService;
+
+  constructor (userService: IUserService) {
+    this._userService = userService;
+  }
+
   byType(item: Item): boolean {
     const itemType = ElementParser.getOption(item.elements, ItemElementType.TYPE);
 
@@ -161,6 +168,20 @@ export default class ItemFilterService implements IItemFilterService {
       }
 
       return false;
+    };
+  }
+
+  bySeenItems(user: User) {
+    const self = this;
+
+    return function (item: Item): Promise<boolean> {
+      return self._userService.getSeenItemsIdById(user.id).then((userAndItemsId) => {
+        if (userAndItemsId !== undefined) {
+          return userAndItemsId.items.length == 0 || !userAndItemsId.items.map(it => it.id).includes(item.id);
+        }
+
+        return false;
+      });
     };
   }
 
