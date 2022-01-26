@@ -1,10 +1,11 @@
+import { Item } from './../rg_zoo/item';
 import { MenuStep } from "./../../enums/tg/menu-step-type";
 import { PriceType } from "./../../enums/tg/price-type";
 import { DistrictType } from "../../enums/tg/district-type";
 import { RoomType } from "./../../enums/tg/room-type";
 import { PropertyType } from "./../../enums/tg/property-type";
 import { ApartmentPriceType } from "../../enums/tg/apartment-price-type";
-import { Entity, Column, PrimaryColumn } from "typeorm";
+import { Entity, Column, PrimaryColumn, JoinTable, ManyToMany } from "typeorm";
 
 @Entity("tg_user")
 export class User {
@@ -77,5 +78,24 @@ export class User {
     nullable: true,
     default: null,
   })
+  // last interested in item id 
   interestedInItemId?: number;
+  // allow insert only
+  // tg_users -> rg_zoo_item
+  @ManyToMany(() => Item, item => item.users, {
+    cascade: ['insert'],
+    onDelete: 'CASCADE'
+  })
+  @JoinTable({  
+    name: 'tg_user_items_seen',
+    joinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id'
+  },
+  inverseJoinColumn: {
+      name: 'item_id',
+      referencedColumnName: 'id'
+  }
+  })
+  items!: Item[];
 }
