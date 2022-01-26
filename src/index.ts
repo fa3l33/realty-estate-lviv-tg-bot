@@ -46,7 +46,7 @@ async function bootstrap() {
     const itemNotificationService: INotificationJob = new NotificationJob(
       messageService,
       userService,
-      new ItemFilterService(),
+      new ItemFilterService(userService),
       itemService
     );
     itemNotificationService.start();
