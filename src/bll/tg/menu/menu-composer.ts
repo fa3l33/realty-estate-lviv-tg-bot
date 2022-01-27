@@ -4,7 +4,7 @@ import { Api, Bot, Keyboard, RawApi } from "grammy";
 import { getUserSession, SessionContextFlavor } from "./../session-context";
 import { MessageBuilder } from "../message-builder";
 import IMenu from "./menu.interface";
-import Menu from "./Menu";
+import Menu from "./menu";
 import botSessionInterface from "../../../dal/interfaces/bot-session.interface";
 import PriceMenu from './price-menu';
 import PropertyMenu from './property-menu';

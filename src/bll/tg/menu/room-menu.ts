@@ -7,7 +7,7 @@ import BotSession from '../../../dal/interfaces/bot-session.interface';
 import IMenu from './menu.interface';
 import { getUserSession, SessionContextFlavor } from '../session-context';
 import { addChecked } from '../../emoji';
-import Menu from './Menu';
+import Menu from './menu';
 
 export default class  RoomMenu extends Menu implements IMenu {
   getMenu(userSession: BotSession): Keyboard {

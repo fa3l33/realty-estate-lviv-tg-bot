@@ -7,7 +7,7 @@ import { buildCheckedMenu, toggleDistrictFlag } from './menu-helper';
 import IMenu from './menu.interface';
 import { getUserSession, SessionContextFlavor } from '../session-context';
 import { addChecked } from '../../emoji';
-import Menu from './Menu';
+import Menu from './menu';
 
 export class DistrictMenu extends Menu implements IMenu {
   getMenu(userSession: BotSession): Keyboard {
