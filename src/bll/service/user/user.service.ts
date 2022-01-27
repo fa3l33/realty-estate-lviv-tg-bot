@@ -1,4 +1,4 @@
-import { getRepository, Repository } from "typeorm";
+import { getRepository, Like, Repository } from "typeorm";
 import { Item } from "../../../dal/model/rg_zoo/item";
 import { User } from "../../../dal/model/tg/user";
 import logger from "../../logger";
@@ -16,7 +16,7 @@ export default class UserService implements IUserService {
   }
 
   public async getByPhone(phoneNumber: string): Promise<User | undefined> {
-    return this._userRepository.findOne({ phoneNumber: phoneNumber });
+    return this._userRepository.findOne({ phoneNumber: Like(`%${phoneNumber}%`) });
   }
 
   public async getSeenItemsIdById(id: number): Promise<User | undefined> {
