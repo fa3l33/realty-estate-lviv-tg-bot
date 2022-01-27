@@ -42,6 +42,9 @@ export default class UserService implements IUserService {
 
   public async saveSeenItems(user: User, items: Item[]) : Promise<void> {
     if (user && items && items.length) {
+      user.notifiedAtTS = new Date(Date.now());
+      this._userRepository.save(user);
+
       var rows = items.map(it => {
         return { user_id: user.id, item_id: it.id };
       });
