@@ -33,9 +33,8 @@ export default class MessageService implements IMessageService {
     const user: User | undefined = await this._userService.getById(userId);
 
     if (!config.realtyGroup.MANAGER_PHONE) {
-      throw new Error(
-        "Manger phone is required. Make sure it is specified in the settings."
-      );
+        logger.fatal('Manager phone is required. Make sure it is specified in the settings.');
+        return;
     }
 
     const manager: User | undefined = await this._userService.getByPhone(

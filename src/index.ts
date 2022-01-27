@@ -6,7 +6,6 @@ import { initialize, SessionContextFlavor } from "./bll/tg/session-context";
 import { User } from "./dal/model/tg/user";
 import { TypeOrmAdapter } from "./dal/user-storage-adapter";
 import initializeDataBase from "./db-initializer";
-import CommandHelper from "./bll/tg/command/command-helper";
 import NotificationJob from "./bll/service/jobs/notification.job";
 import ItemFilterService from "./bll/service/item/item-filter.service";
 import INotificationJob from "./bll/service/jobs/inotification.job";
@@ -18,6 +17,8 @@ import ManagerConnectionMiddleware from "./bll/middleware/manager-connection.mid
 import ConnectionMiddleware from "./bll/middleware/connection.middleware";
 import ContactMiddleware from "./bll/middleware/contact.middleware";
 import MessageService from "./bll/service/message.service";
+import ICommandHandler from "./bll/tg/command/icommnad-handler";
+import CommandHandler from "./bll/tg/command/command-handler";
  
 async function bootstrap() {
     // create global MySql connection
@@ -34,7 +35,6 @@ async function bootstrap() {
       })
     );
 
-    CommandHelper.init(bot);
     const userService = new UserService();
     const itemService = new ItemService();
     const messageService = new MessageService(bot, userService, itemService);
@@ -43,6 +43,7 @@ async function bootstrap() {
     const connectionMiddleware = new ConnectionMiddleware(messageService);
     const contactMiddleware = new ContactMiddleware(messageService);
 
+    // create notification job class to schedule notifications
     const itemNotificationService: INotificationJob = new NotificationJob(
       messageService,
       userService,
@@ -51,16 +52,17 @@ async function bootstrap() {
     );
     itemNotificationService.start();
 
-    bot.on("message:contact").use(contactMiddleware);
+    // register bot commands
+    let commandHandler: ICommandHandler = new CommandHandler();
+    commandHandler.register(bot);
 
+    bot.on("message:contact").use(contactMiddleware);
     bot.on("callback_query:data").filter((ctx) => {
       return new RegExp(Constants.REGEX.ITEM_DETAILS).test(ctx.callbackQuery.data);
     }).use(itemDetailsMiddleware);
-
     bot.on("callback_query:data").filter((ctx) => {
       return new RegExp(Constants.REGEX.MANAGER_CONNECTION).test(ctx.callbackQuery.data);
     }).use(managerConnectionMiddleware);
-
     bot.on(":text").filter((ctx) => {
       return new RegExp(Constants.REGEX.CONTACT_BY_PHONE_OR_MESSAGE).test(ctx.message!.text);
     }).use(connectionMiddleware);
