@@ -7,10 +7,17 @@ import {
 import MenuComposer from "../menu/menu-composer";
 import TextUtils from "../../../common/text-utils";
 import config from "../../../config";
+import INotificationService from "../../service/inotification.service";
 
 export default class CommandHandler {
+    private readonly _notificationService: INotificationService;
+
+    constructor(notificationService: INotificationService) {
+        this._notificationService = notificationService;
+    }
+
   public register(bot: Bot<SessionContextFlavor>) {
-    var menuComposer = new MenuComposer();
+    var menuComposer = new MenuComposer(this._notificationService);
 
     bot.api.setMyCommands([
       { command: "start", description: "Початок" },

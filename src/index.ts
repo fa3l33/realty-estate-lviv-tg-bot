@@ -19,6 +19,7 @@ import ContactMiddleware from "./bll/middleware/contact.middleware";
 import MessageService from "./bll/service/message.service";
 import ICommandHandler from "./bll/tg/command/icommnad-handler";
 import CommandHandler from "./bll/tg/command/command-handler";
+import NotificationService from "./bll/service/notification.service";
  
 async function bootstrap() {
     // create global MySql connection
@@ -42,18 +43,17 @@ async function bootstrap() {
     const managerConnectionMiddleware = new ManagerConnectionMiddleware();
     const connectionMiddleware = new ConnectionMiddleware(messageService);
     const contactMiddleware = new ContactMiddleware(messageService);
-
-    // create notification job class to schedule notifications
-    const itemNotificationService: INotificationJob = new NotificationJob(
-      messageService,
+    const notificationService = new NotificationService( messageService,
       userService,
       new ItemFilterService(userService),
-      itemService
-    );
+      itemService);
+
+    // create notification job class to schedule notifications
+    const itemNotificationService: INotificationJob = new NotificationJob(notificationService);
     itemNotificationService.start();
 
     // register bot commands
-    let commandHandler: ICommandHandler = new CommandHandler();
+    let commandHandler: ICommandHandler = new CommandHandler(notificationService);
     commandHandler.register(bot);
 
     bot.on("message:contact").use(contactMiddleware);
