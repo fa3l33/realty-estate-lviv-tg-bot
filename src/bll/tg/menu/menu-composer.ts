@@ -11,12 +11,17 @@ import PropertyMenu from './property-menu';
 import RoomMenu from './room-menu';
 import Constants from '../constants';
 import EnumHelper from '../../enum-helper';
+import INotificationService from '../../service/inotification.service';
+import dayjs = require('dayjs');
 
 export default class MenuComposer extends Menu implements IMenu {
   _menus: Array<IMenu>;
+  private readonly _notificationService: INotificationService;
 
-  constructor() {
+  constructor(notificationService: INotificationService) {
     super();
+
+    this._notificationService = notificationService;
 
     this._menus = [
       new PropertyMenu(),
@@ -102,6 +107,10 @@ export default class MenuComposer extends Menu implements IMenu {
             remove_keyboard: true,
           },
         });
+
+        if (!userSession.notifiedAtTS) {
+          this._notificationService.notifyUser(dayjs().subtract(180, 'day').unix(), userSession.id);
+        }
       }
     );
   }
