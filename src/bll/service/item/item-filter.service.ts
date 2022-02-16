@@ -1,17 +1,16 @@
-import { DealType } from '../../../dal/enums/rg_zoo/deal-type';
 import { PriceType } from '../../../dal/enums/tg/price-type';
 import { DistrictType } from '../../../dal/enums/tg/district-type';
 import { RoomType } from '../../../dal/enums/tg/room-type';
 import { PropertyType } from '../../../dal/enums/tg/property-type';
 import { ApartmentPriceType } from "../../../dal/enums/tg/apartment-price-type";
-import { Item } from "../../../dal/model/rg_zoo/item";
 import { hasFlag } from "../../../common/enum-utils";
 import { User } from "../../../dal/model/tg/user";
 import EnumHelper from "../../enum-helper";
 import IItemFilterService from "./iitem-filter.service";
-import { ItemElementType } from "../../../dal/enums/tg/item-elemnt-type";
-import ElementParser from '../../elemens-parser';
 import IUserService from '../user/iuser.service';
+import Constants from '../../tg/constants';
+import LigaProItemDTO from '../../dto/liga-pro-item.dto';
+import logger from '../../logger';
 
 export default class ItemFilterService implements IItemFilterService {
   private readonly _userService: IUserService;
@@ -20,51 +19,52 @@ export default class ItemFilterService implements IItemFilterService {
     this._userService = userService;
   }
 
-  byType(item: Item): boolean {
-    const itemType = ElementParser.getOption(item.elements, ItemElementType.TYPE);
+  byType(item: LigaProItemDTO): boolean {
+    const itemType = item.getType();
 
     if (itemType) {
-      return itemType === DealType.SELL;
+      return itemType === Constants.LIGA_PRO.TYPE.SALE;
     }
 
     return true;
   }
 
-  byProperty(user: User) {
+  byProperty(user: User) : (item: LigaProItemDTO) => boolean {
     const propertyType = user.propertyType;
 
-    return function (item: Item): boolean {
+    return function (item: LigaProItemDTO): boolean {
       // interested in all
       if (propertyType === PropertyType.NONE) return true;
 
+      let itemCategory = item.getCategory();
       if (
         hasFlag(propertyType, PropertyType.NEW_BUILDING) &&
-        item.categories.find((ct) => ct.id === 30) !== null
+        itemCategory === Constants.LIGA_PRO.CATEGORY.APARTMENT  // should be NEW_BUILDING
       )
         return true;
 
       // if apartment selected include new buildings
       if (
         hasFlag(propertyType, PropertyType.APARTMENT) &&
-        item.categories.find((ct) => ct.id === 30 || ct.id === 6)
+        itemCategory === Constants.LIGA_PRO.CATEGORY.APARTMENT
       )
         return true;
 
       if (
         hasFlag(propertyType, PropertyType.HOUSE) &&
-        item.categories.find((ct) => ct.id === 7)
+        itemCategory === Constants.LIGA_PRO.CATEGORY.HOUSE
       )
         return true;
 
       if (
         hasFlag(propertyType, PropertyType.LAND) &&
-        item.categories.find((ct) => ct.id === 8)
+        itemCategory === Constants.LIGA_PRO.CATEGORY.LAND
       )
         return true;
 
       if (
         hasFlag(propertyType, PropertyType.COMMERCIAL) &&
-        item.categories.find((ct) => ct.id === 9)
+        itemCategory === Constants.LIGA_PRO.CATEGORY.COMMERCIAL
       )
         return true;
 
@@ -72,12 +72,12 @@ export default class ItemFilterService implements IItemFilterService {
     };
   }
 
-  byRoomsCount(user: User) {
+  byRoomsCount(user: User) : (item: LigaProItemDTO) => boolean {
     const roomType: RoomType = user.roomType;
     let selectedRooms: Array<number> = [];
 
-    return function (item: Item): boolean {
-      let roomsCount = ElementParser.getOption(item.elements, ItemElementType.ROOMS_COUNT);
+    return function (item: LigaProItemDTO): boolean {
+      let roomsCount = item.getRoomsCount();
 
       // if apartments not selected return all items
       if (!EnumHelper.hasApartmentsEnabled(user.propertyType)) return true;
@@ -87,9 +87,7 @@ export default class ItemFilterService implements IItemFilterService {
 
       if (roomsCount) {
         if (hasFlag(roomType, RoomType.ONE)) selectedRooms.push(1);
-
         if (hasFlag(roomType, RoomType.TWO)) selectedRooms.push(2);
-
         if (hasFlag(roomType, RoomType.THREE)) selectedRooms.push(3);
 
         if (hasFlag(roomType, RoomType.FOUR_OR_MORE)) {
@@ -109,11 +107,11 @@ export default class ItemFilterService implements IItemFilterService {
     };
   }
 
-  byPrice(user: User) {
+  byPrice(user: User) : (item: LigaProItemDTO) => boolean {
     const self = this;
 
-    return function (item: Item): boolean {
-      let price = ElementParser.getOption(item.elements, ItemElementType.PRICE_USD);
+    return function (item: LigaProItemDTO): boolean {
+      let price = item.getPriceUSD();
 
       if (price) {
         if (EnumHelper.hasNonApartmentEnabled(user.propertyType)) {
@@ -127,40 +125,126 @@ export default class ItemFilterService implements IItemFilterService {
     };
   }
 
-  byDistrict(user: User) : (item: Item) => boolean {
+  byDistrict(user: User) : (item: LigaProItemDTO) => boolean {
     const districtType = user.districtType;
 
-    return function (item: Item): boolean {
-      let district = ElementParser.getOption(item.elements, ItemElementType.DISTRICT);
-
+  return function (item: LigaProItemDTO): boolean {
+      let district: string = item.getSubLocalityName();
+      
       if (district) {
         if (districtType === DistrictType.NONE) return true;
 
         if (
-          hasFlag(districtType, DistrictType.TAVRICHESK) &&
-          district === "severnyj-tavricheskij"
+          hasFlag(districtType, DistrictType.VOENKA) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.VOENKA
         )
           return true;
-        if (hasFlag(districtType, DistrictType.CENTER) && district === "centr")
-          return true;
+
         if (
-          hasFlag(districtType, DistrictType.ZHILPOSELOK) &&
-          district === "zhilposelok"
+          hasFlag(districtType, DistrictType.VOSTOCHNIY) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.VOSTOCHNIY
         )
           return true;
+
         if (
-          hasFlag(districtType, DistrictType.OSTROV) &&
-          district === "ostrov-neftegavan"
+          hasFlag(districtType, DistrictType.KINDIYKA) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.KINDIYKA
         )
           return true;
+
         if (
-          hasFlag(districtType, DistrictType.SHUMENSKIY) &&
-          district === "shumenskij"
+          hasFlag(districtType, DistrictType.STEKLOTARA) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.STEKLOTARA
         )
           return true;
+
+        if (
+          hasFlag(districtType, DistrictType.TEKSTILNIY) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.TEKSTILNIY
+        )
+          return true;
+
         if (
           hasFlag(districtType, DistrictType.HBK) &&
-          district === "hbk-steklotara"
+          district === Constants.LIGA_PRO.SUB_DISTRICT.HBK
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.ZHILMASIV) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.ZHILMASIV
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.ZHILPOSELOK) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.ZHILPOSELOK
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.ZABALKA) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.ZABALKA
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.NEFTEGAVAN) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.NEFTEGAVAN
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.OSTROV) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.OSTROV
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.PORT) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.PORT
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.PORT_ELEVATOR) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.PORT_ELEVATOR
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.PRIVOKZALNIY) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.PRIVOKZALNIY
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.SHUMSKIY) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.SHUMSKIY
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.MELNIZA) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.MELNIZA
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.SEVERNIY) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.SEVERNIY
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.CENTR) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.CENTR
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.TAVRICHESK) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.TAVRICHESK
         )
           return true;
       } else {
@@ -171,15 +255,18 @@ export default class ItemFilterService implements IItemFilterService {
     };
   }
 
-  bySeenItems(user: User) {
+  bySeenItems(user: User) : (item: LigaProItemDTO) => Promise<boolean> {
     const self = this;
 
-    return function (item: Item): Promise<boolean> {
-      return self._userService.getSeenItemsIdById(user.id).then((userAndItemsId) => {
+    return function (item: LigaProItemDTO): Promise<boolean> {
+      return self._userService.getByIdWithSeenItemIds(user.id).then((userAndItemsId) => {
         if (userAndItemsId !== undefined) {
-          return userAndItemsId.items.length == 0 || !userAndItemsId.items.map(it => it.id).includes(item.id);
+          return userAndItemsId.itemIds.length == 0 || !userAndItemsId.itemIds.includes(Number.parseInt(item.getInternalId()));
         }
 
+        return false;
+      }).catch((error) => {
+        logger.error(error, 'Unable to get user item ids.');
         return false;
       });
     };
@@ -188,6 +275,7 @@ export default class ItemFilterService implements IItemFilterService {
   private filterByPrice(priceType: PriceType, price: number) : boolean {
       // nothing selected
       if (priceType === PriceType.NONE) return true;
+
       if (hasFlag(priceType, PriceType.FROM_20_TO_40) && price < 40000)
         return true;
       if (
@@ -215,24 +303,24 @@ export default class ItemFilterService implements IItemFilterService {
     if (apartmentPriceType === ApartmentPriceType.NONE) return true;
     if (
       hasFlag(apartmentPriceType, ApartmentPriceType.FROM_20_TO_35) &&
-      apartmentPriceType < 35000
+      price < 35000
     )
       return true;
     if (
       hasFlag(apartmentPriceType, ApartmentPriceType.FROM_35_TO_45) &&
-      apartmentPriceType >= 35000 &&
-      apartmentPriceType < 45000
+      price >= 35000 &&
+      price < 45000
     )
       return true;
     if (
       hasFlag(apartmentPriceType, ApartmentPriceType.FROM_45_TO_60) &&
-      apartmentPriceType >= 45000 &&
-      apartmentPriceType < 60000
+      price >= 45000 &&
+      price < 60000
     )
       return true;
     if (
       hasFlag(apartmentPriceType, ApartmentPriceType.FROM_60_AND_MORE) &&
-      apartmentPriceType >= 60000
+      price >= 60000
     )
       return true;
 

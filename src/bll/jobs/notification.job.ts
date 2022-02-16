@@ -1,7 +1,7 @@
 import { Range, RecurrenceRule, scheduleJob } from "node-schedule";
 import INotificationJob from "./inotification.job";
 import * as dayjs from 'dayjs';
-import INotificationService from "../inotification.service";
+import INotificationService from "../service/inotification.service";
 export default class NotificationJob implements INotificationJob {
   private readonly _notificationService: INotificationService;
 
@@ -19,6 +19,6 @@ export default class NotificationJob implements INotificationJob {
   }
 
   private async notify() {
-    this._notificationService.notifyUsers(dayjs('2021-12-01').subtract(1, 'day').unix());
+    this._notificationService.notifyUsers(dayjs('2020-01-02').subtract(1, 'day').unix());
   }
 }

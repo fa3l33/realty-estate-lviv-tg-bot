@@ -1,85 +1,32 @@
-import { Item } from "./../../dal/model/rg_zoo/item";
 import TextUtils from "../../common/text-utils";
 import BotSession from "../../dal/interfaces/bot-session.interface";
 import EnumHelper from "../enum-helper";
-import config from "../../config";
-import { CategoryHelper } from "../category-helper";
-import { ItemElementType } from "../../dal/enums/tg/item-elemnt-type";
-import ElementParser from "../elemens-parser";
-import logger from "../logger";
 import dayjs = require("dayjs");
+import LigaProItemDTO from "../dto/liga-pro-item.dto";
 
 export abstract class MessageBuilder {
   public static buildItemInfo(
-    item: Item,
+    item: LigaProItemDTO,
     includeDescription: boolean = false
   ): string {
-    let itemInfo = `${TextUtils.toBold(item.name)}\n\n`;
-
-    try {
-      let elements = JSON.parse(item.elements);
-
-      if (includeDescription) {
-        itemInfo +=
-          MessageBuilder.buildProperty(
-            elements,
-            ItemElementType.DESCRIPTION,
-            "Опис:"
-          ) + "\n";
-      }
-
-      itemInfo +=
-        MessageBuilder.buildProperty(
-          elements,
-          ItemElementType.PRICE_USD,
-          "Вартість (usd):"
-        ) +
-        MessageBuilder.getPropertyType(item) +
-        MessageBuilder.buildProperty(
-          elements,
-          ItemElementType.ROOMS_COUNT,
-          "Кількість кімнат:"
-        ) +
-        MessageBuilder.buildProperty(
-          elements,
-          ItemElementType.FLOOR,
-          "Поверх:"
-        ) +
-        MessageBuilder.buildProperty(
-          elements,
-          ItemElementType.HOUSE_TOTAL_FLOORS,
-          "Поверхів в будівлі:"
-        ) +
-        MessageBuilder.buildProperty(
-          elements,
-          ItemElementType.LAND_HOUSE_AREA,
-          "Площа ділянки:"
-        ) +
-        MessageBuilder.buildProperty(
-          elements,
-          ItemElementType.TOTAL_AREA,
-          "Загальні площа:"
-        ) +
-        MessageBuilder.buildProperty(
-          elements,
-          ItemElementType.LIVE_AREA,
-          "Житлова площа:"
-        ) +
-        MessageBuilder.buildProperty(
-          elements,
-          ItemElementType.KITCHEN_AREA,
-          "Площа кухні:"
-        ) +
-        MessageBuilder.buildProperty(
-          elements,
-          ItemElementType.DISTRICT,
-          "Мікрорайон:"
-        ) +
-        `\n` +
-        this.getSiteURL(item.id);
-    } catch (error) {
-      logger.error(error, "Unable to parser item's elements property.");
+    let itemInfo = `${TextUtils.toBold(item.getTitle())}\n\n`;
+    if (includeDescription) {
+      itemInfo += this.buildProperty(item.getDescription(), "Опис:") + '\n';
     }
+
+    itemInfo +=
+      this.buildProperty(item.getPriceUSD(), "Вартість (usd):")
+      + this.buildProperty(item.getType(), "Рубрика:")
+      + this.buildProperty(item.getRoomsCount(), "Кількість кімнат:")
+      + this.buildProperty(item.getFloor(), "Поверх:")
+      + this.buildProperty(item.getFloorTotal(), "Поверхів в будівлі:")
+      + this.buildProperty(item.getLotAreaValue() + ' ' + item.getLotAreaUnit(), "Площа ділянки:")
+      + this.buildProperty(item.getAreaValue() + ' ' + item.getAreaUnit(), "Загальні площа:")
+      + this.buildProperty(item.getLivingSpaceValue() + ' ' + item.getLivingSpaceUnit(), "Житлова площа:")
+      + this.buildProperty(item.getKitchenSpaceValue() + ' ' + item.getKitchenSpaceUnit(), "Площа кухні:")
+      + this.buildProperty(EnumHelper.ligaProDistrictMap.get(item.getSubLocalityName()) || '', "Мікрорайон:")
+      + `\n`
+      + this.getSiteURL(item.getURL());
 
     return itemInfo;
   }
@@ -116,7 +63,9 @@ export abstract class MessageBuilder {
     return filter;
   }
 
-  public static buildConnectionResponse(isPhoneResponse: boolean = false) : string {
+  public static buildConnectionResponse(
+    isPhoneResponse: boolean = false
+  ): string {
     const hour = dayjs().hour();
     const shouldContactToday = hour >= 9 && hour < 16;
 
@@ -135,45 +84,15 @@ export abstract class MessageBuilder {
     }
   }
 
-  private static getPropertyType(item: Item): string {
-    // categories: apartment, house, land, commercial, new buildings
-    let propertyCategory = item.categories.find((ct) =>
-      [6, 7, 8, 9, 30].includes(ct.id)
-    );
-
-    if (propertyCategory) {
-      return `${TextUtils.toBold("Рубрика:")} ${CategoryHelper.asString(
-        propertyCategory.id
-      )}\n`;
+  private static buildProperty(value: string, label: string) {
+    if (value !== undefined && value.trim()) {
+      return `${TextUtils.toBold(label)} ${value}\n`;
     }
 
     return "";
   }
 
-  private static buildProperty(
-    elements: any,
-    itemElementType: ItemElementType,
-    label: string
-  ) {
-    let property: string | undefined = undefined;
-
-    if (itemElementType === ItemElementType.DISTRICT) {
-      property = ElementParser.getOption(elements, itemElementType);
-    } else {
-      property = ElementParser.getValue(elements, itemElementType);
-    }
-
-    if (property !== undefined) {
-      return `${TextUtils.toBold(label)} ${property}\n`;
-    }
-
-    return "";
-  }
-
-  private static getSiteURL(id: number): string {
-    return TextUtils.toLink(
-      "Переглянуті на сайті",
-      (config.realtyGroup.SITE_URL as string) + `/item/${id}`
-    );
+  private static getSiteURL(url: string): string {
+    return TextUtils.toLink("Переглянуті на сайті", url);
   }
 }

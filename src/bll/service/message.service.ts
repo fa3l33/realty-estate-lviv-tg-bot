@@ -1,6 +1,5 @@
 import { SessionContextFlavor } from "./../tg/session-context";
 import { Bot } from "grammy";
-import { Item } from "./../../dal/model/rg_zoo/item";
 import logger from "../logger";
 import { User } from "./../../dal/interfaces/iuser";
 import IMessageService from "./imessage.service";
@@ -10,6 +9,8 @@ import { MessageBuilder } from "../tg/message-builder";
 import MarkupManager from "../tg/markup-manager";
 import config from "../../config";
 import TextUtils from "../../common/text-utils";
+import LigaProItemDTO from "../dto/liga-pro-item.dto";
+import { InputMediaPhoto } from "grammy/out/platform.node";
 
 export default class MessageService implements IMessageService {
   private _userService: IUserService;
@@ -33,8 +34,10 @@ export default class MessageService implements IMessageService {
     const user: User | undefined = await this._userService.getById(userId);
 
     if (!config.realtyGroup.MANAGER_PHONE) {
-        logger.fatal('Manager phone is required. Make sure it is specified in the settings.');
-        return;
+      logger.fatal(
+        "Manager phone is required. Make sure it is specified in the settings."
+      );
+      return;
     }
 
     const manager: User | undefined = await this._userService.getByPhone(
@@ -52,13 +55,11 @@ export default class MessageService implements IMessageService {
               manager.chatId,
               `Користувач, ${user.firstName} ${
                 user.lastName
-              }, зацікавився оголошенням: ${
-                lastInterestedItem.id
-              } - ${TextUtils.toLink(
-                lastInterestedItem.name,
+              }, зацікавився оголошенням: ${lastInterestedItem.getInternalId()} - ${TextUtils.toLink(
+                lastInterestedItem.getTitle(),
                 (config.realtyGroup.SITE_URL as string) +
                   "/item/" +
-                  lastInterestedItem.id
+                  lastInterestedItem.getInternalId()
               )} тa очікує телефонного дзвінку.`,
               {
                 parse_mode: "HTML",
@@ -83,13 +84,11 @@ export default class MessageService implements IMessageService {
               manager.chatId,
               `Користувач, ${user.firstName} ${
                 user.lastName
-              }, зацікавився оголошенням: ${
-                lastInterestedItem.id
-              } - ${TextUtils.toLink(
-                lastInterestedItem.name,
+              }, зацікавився оголошенням: ${lastInterestedItem.getInternalId()} - ${TextUtils.toLink(
+                lastInterestedItem.getTitle(),
                 (config.realtyGroup.SITE_URL as string) +
                   "/item/" +
-                  lastInterestedItem.id
+                  lastInterestedItem.getInternalId()
               )} та очікує повідомлення у приватний чат. ${TextUtils.toLink(
                 user.firstName + " " + user.lastName,
                 "https://t.me/" + user.username
@@ -118,12 +117,22 @@ export default class MessageService implements IMessageService {
   }
 
   // todo: move to another service
-  public postItem(item: Item, chatId: number, userId: number): void {
-    this._bot.api.sendMessage(chatId, MessageBuilder.buildItemInfo(item), {
-      parse_mode: "HTML",
-      reply_markup: MarkupManager.getItemIK(userId, item.id),
-      disable_web_page_preview: true,
-    });
+  public async postItem(
+    item: LigaProItemDTO,
+    chatId: number,
+    userId: number
+  ): Promise<void> {
+    const photos = this.mapToTGPhotos(item, 4);
+
+    if (photos.length) {
+      if (photos.length === 1) {
+        this._bot.api.sendPhoto(chatId, photos[0].media).then(() => this.sendMessage(chatId, userId, item));
+      } else {
+        this._bot.api.sendMediaGroup(chatId, photos).then(() => this.sendMessage(chatId, userId, item));
+      }
+    } else {
+      this.sendMessage(chatId, userId, item);
+    }
   }
 
   /**
@@ -131,22 +140,59 @@ export default class MessageService implements IMessageService {
    */
   public async postDetailedItem(userId: number, itemId: number): Promise<void> {
     const user = await this._userService.getById(userId);
-    const item = await this._itemService.getById(itemId);
+    const item = this._itemService.getById(itemId);
 
     if (user && item) {
-      this._bot.api.sendMessage(
-        user.chatId,
-        MessageBuilder.buildItemInfo(item, true),
-        {
-          parse_mode: "HTML",
-          reply_markup: MarkupManager.getItemIK(userId, item.id),
-          disable_web_page_preview: true,
+      const photos = this.mapToTGPhotos(item, 0);
+
+      if (photos.length) {
+        if (photos.length === 1) {
+          this._bot.api.sendPhoto(user.chatId, photos[0].media).then(() => this.sendMessage(user.chatId, userId, item, true));
         }
-      );
-    } else {
-      logger.error(
-        `Unable to send detailed item information. Item or User does not exist. ItemId: ${itemId}, UserId: ${userId}`
-      );
+
+        if (photos.length > 1 && photos.length < 10) {
+          this._bot.api.sendMediaGroup(user.chatId, photos).then(() => this.sendMessage(user.chatId, userId, item, true));
+        }
+
+        if (photos.length >= 10) {
+          this._bot.api.sendMediaGroup(user.chatId, photos.slice(0, 9));
+          this._bot.api.sendMediaGroup(user.chatId, photos.slice(9, 16)).then(() => this.sendMessage(user.chatId, userId, item, true));
+        }
+      } else {
+        this.sendMessage(user.chatId, userId, item, true);
+      }
     }
+  }
+
+  private mapToTGPhotos(
+    item: LigaProItemDTO,
+    count: number = 0
+  ): Array<InputMediaPhoto> {
+    return item.getImagesURL(count).map((ph) => {
+      return {
+        media: ph,
+        type: "photo",
+      } as InputMediaPhoto;
+    });
+  }
+
+  private async sendMessage(
+    chatId: number,
+    userId: number,
+    item: LigaProItemDTO,
+    detailed: boolean = false
+  ) : Promise<void> {
+    this._bot.api.sendMessage(
+      chatId,
+      MessageBuilder.buildItemInfo(item, detailed),
+      {
+        parse_mode: "HTML",
+        reply_markup: MarkupManager.getItemIK(
+          userId,
+          Number.parseInt(item.getInternalId())
+        ),
+        disable_web_page_preview: true,
+      }
+    );
   }
 }

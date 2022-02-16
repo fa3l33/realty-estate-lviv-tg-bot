@@ -1,5 +1,4 @@
 import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
-import { User } from '../tg/user';
 import { Category } from "./category";
 
 
@@ -79,6 +78,4 @@ export class Item {
         }
     })
     categories!: Category[];
-    @ManyToMany(() => User, user => user.items)
-    users!: User[]
 }

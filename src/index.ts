@@ -1,14 +1,12 @@
 import "reflect-metadata";
 import config from "./config";
-import { Bot, lazySession } from "grammy";
+import { Bot, Context, lazySession } from "grammy";
 import { getRepository } from "typeorm";
 import { initialize, SessionContextFlavor } from "./bll/tg/session-context";
 import { User } from "./dal/model/tg/user";
 import { TypeOrmAdapter } from "./dal/user-storage-adapter";
 import initializeDataBase from "./db-initializer";
-import NotificationJob from "./bll/service/jobs/notification.job";
 import ItemFilterService from "./bll/service/item/item-filter.service";
-import INotificationJob from "./bll/service/jobs/inotification.job";
 import UserService from "./bll/service/user/user.service";
 import ItemService from "./bll/service/item/item.service";
 import Constants from "./bll/tg/constants";
@@ -20,7 +18,16 @@ import MessageService from "./bll/service/message.service";
 import ICommandHandler from "./bll/tg/command/icommnad-handler";
 import CommandHandler from "./bll/tg/command/command-handler";
 import NotificationService from "./bll/service/notification.service";
- 
+
+import ILigaProPortingService from "./bll/service/iligapro-porting.service";
+import LigaProPortingService from "./bll/service/ligapro-porting.service";
+import INotificationJob from "./bll/jobs/inotification.job";
+import NotificationJob from "./bll/jobs/notification.job";
+import IItemService from "./bll/service/item/iitem.service";
+import IMessageService from "./bll/service/imessage.service";
+import { run, sequentialize } from "@grammyjs/runner";
+import logger from "./bll/logger";
+
 async function bootstrap() {
     // create global MySql connection
     await initializeDataBase();
@@ -29,6 +36,20 @@ async function bootstrap() {
       config.telegram.BOT_SECRET_KEY as string
     );
 
+    const sequentializer = (ctx: Context) => {
+      const chat = ctx.chat?.id.toString();
+      const user = ctx.from?.id.toString();
+
+      if (chat && user) {
+        return `${chat}_${user}`;
+      }
+      
+      logger.error(undefined, 'Unable to determine user from the context: %Ctx', ctx);
+      return undefined;
+    };
+
+    bot.use(sequentialize(sequentializer));
+
     bot.use(
       lazySession({
         initial: initialize,
@@ -36,9 +57,13 @@ async function bootstrap() {
       })
     );
 
+    // const throttler = apiThrottler();
+    // bot.api.config.use(throttler);
+
     const userService = new UserService();
-    const itemService = new ItemService();
-    const messageService = new MessageService(bot, userService, itemService);
+    const ligaProPortingService: ILigaProPortingService = new LigaProPortingService();
+    const itemService: IItemService = new ItemService(ligaProPortingService);
+    const messageService: IMessageService = new MessageService(bot, userService, itemService);
     const itemDetailsMiddleware = new ItemDetailsMiddleware(messageService);
     const managerConnectionMiddleware = new ManagerConnectionMiddleware();
     const connectionMiddleware = new ConnectionMiddleware(messageService);
@@ -47,6 +72,8 @@ async function bootstrap() {
       userService,
       new ItemFilterService(userService),
       itemService);
+
+    ligaProPortingService.import();
 
     // create notification job class to schedule notifications
     const itemNotificationService: INotificationJob = new NotificationJob(notificationService);
@@ -67,11 +94,17 @@ async function bootstrap() {
       return new RegExp(Constants.REGEX.CONTACT_BY_PHONE_OR_MESSAGE).test(ctx.message!.text);
     }).use(connectionMiddleware);
 
-    bot.catch((value) => {
-      console.log(value);
+    bot.catch((error) => {
+      logger.error(error, 'Unexpected error.'); 
     });
 
-    bot.start();
+    const runner = run(bot);
+
+    // Stopping the bot when Node process
+    // is about to be terminated
+    const stopRunner = () => runner.isRunning() && runner.stop();
+    process.once("SIGINT", stopRunner);
+    process.once("SIGTERM", stopRunner);
 }
 
 bootstrap();

@@ -100,6 +100,8 @@ export default class MenuComposer extends Menu implements IMenu {
       },
       async (ctx) => {
         let userSession = await getUserSession(ctx);
+        userSession.isActive = true;
+        userSession.lastUpdateTS = new Date(Date.now());
 
         ctx.reply(MessageBuilder.buildFilter(userSession), {
           parse_mode: "HTML",
@@ -109,7 +111,8 @@ export default class MenuComposer extends Menu implements IMenu {
         });
 
         if (!userSession.notifiedAtTS) {
-          this._notificationService.notifyUser(dayjs().subtract(180, 'day').unix(), userSession.id);
+          // this._notificationService.notifyUser(dayjs('2020-01-01').subtract(180, 'day').unix(), userSession.id);
+          this._notificationService.notifyUser(dayjs('2020-01-01').unix(), userSession.id);
         }
       }
     );

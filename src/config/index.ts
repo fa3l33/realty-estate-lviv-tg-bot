@@ -19,5 +19,6 @@ export default {
     db_database: process.env.DB_DATABASE,
     db_username:  process.env.DB_USERNAME,
     db_password: process.env.DB_PASSWORD,
-    log_folder: process.env.LOG_FOLDER || 'logs'
+    log_folder: process.env.LOG_FOLDER || 'logs',
+    tmp_folder: process.env.TMP_FOLDER || 'tmp'
 }

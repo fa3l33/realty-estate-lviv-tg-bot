@@ -14,6 +14,7 @@ import Menu from './menu';
 export default class PriceMenu extends Menu implements IMenu {
   getMenu(userSession: BotSession): Keyboard {
     const keyboard = new Keyboard();
+    userSession.menuStep = MenuStep.PRICE;
 
     if (EnumHelper.hasNonApartmentEnabled(userSession.propertyType)) {
       keyboard.text(

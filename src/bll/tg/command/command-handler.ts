@@ -87,10 +87,6 @@ export default class CommandHandler {
     ctx: SessionContextFlavor,
     menuComposer: MenuComposer
   ): Promise<void> {
-    let userSession = await getUserSession(ctx);
-    userSession.isActive = true;
-    userSession.lastUpdateTS = new Date(Date.now());
-
     menuComposer.sendDefaultMenu(ctx);
   }
 }
