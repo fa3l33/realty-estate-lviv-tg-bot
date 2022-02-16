@@ -1,5 +1,5 @@
 import { PriceType } from '../../../dal/enums/tg/price-type';
-// import { DistrictType } from '../../../dal/enums/tg/district-type';
+import { DistrictType } from '../../../dal/enums/tg/district-type';
 import { RoomType } from '../../../dal/enums/tg/room-type';
 import { PropertyType } from '../../../dal/enums/tg/property-type';
 import { ApartmentPriceType } from "../../../dal/enums/tg/apartment-price-type";
@@ -87,9 +87,7 @@ export default class ItemFilterService implements IItemFilterService {
 
       if (roomsCount) {
         if (hasFlag(roomType, RoomType.ONE)) selectedRooms.push(1);
-
         if (hasFlag(roomType, RoomType.TWO)) selectedRooms.push(2);
-
         if (hasFlag(roomType, RoomType.THREE)) selectedRooms.push(3);
 
         if (hasFlag(roomType, RoomType.FOUR_OR_MORE)) {
@@ -128,50 +126,132 @@ export default class ItemFilterService implements IItemFilterService {
   }
 
   byDistrict(user: User) : (item: LigaProItemDTO) => boolean {
-    // const districtType = user.districtType;
+    const districtType = user.districtType;
 
-    return function (item: LigaProItemDTO): boolean {
-      console.log(item);
-      return true;
+  return function (item: LigaProItemDTO): boolean {
+      let district: string = item.getSubLocalityName();
       
-      // TODO: Update after live masiv is pulled from site
-      // let district: string = item.getSubLocalityName();
-      
-      // if (district) {
-      //   if (districtType === DistrictType.NONE) return true;
+      if (district) {
+        if (districtType === DistrictType.NONE) return true;
 
-      //   if (
-      //     hasFlag(districtType, DistrictType.TAVRICHESK) &&
-      //     district === "severnyj-tavricheskij"
-      //   )
-      //     return true;
-      //   if (hasFlag(districtType, DistrictType.CENTER) && district === "centr")
-      //     return true;
-      //   if (
-      //     hasFlag(districtType, DistrictType.ZHILPOSELOK) &&
-      //     district === "zhilposelok"
-      //   )
-      //     return true;
-      //   if (
-      //     hasFlag(districtType, DistrictType.OSTROV) &&
-      //     district === "ostrov-neftegavan"
-      //   )
-      //     return true;
-      //   if (
-      //     hasFlag(districtType, DistrictType.SHUMENSKIY) &&
-      //     district === "shumenskij"
-      //   )
-      //     return true;
-      //   if (
-      //     hasFlag(districtType, DistrictType.HBK) &&
-      //     district === "hbk-steklotara"
-      //   )
-      //     return true;
-      // } else {
-      //   return true;
-      // }
+        if (
+          hasFlag(districtType, DistrictType.VOENKA) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.VOENKA
+        )
+          return true;
 
-      // return false;
+        if (
+          hasFlag(districtType, DistrictType.VOSTOCHNIY) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.VOSTOCHNIY
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.KINDIYKA) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.KINDIYKA
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.STEKLOTARA) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.STEKLOTARA
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.TEKSTILNIY) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.TEKSTILNIY
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.HBK) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.HBK
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.ZHILMASIV) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.ZHILMASIV
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.ZHILPOSELOK) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.ZHILPOSELOK
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.ZABALKA) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.ZABALKA
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.NEFTEGAVAN) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.NEFTEGAVAN
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.OSTROV) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.OSTROV
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.PORT) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.PORT
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.PORT_ELEVATOR) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.PORT_ELEVATOR
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.PRIVOKZALNIY) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.PRIVOKZALNIY
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.SHUMSKIY) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.SHUMSKIY
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.MELNIZA) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.MELNIZA
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.SEVERNIY) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.SEVERNIY
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.CENTR) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.CENTR
+        )
+          return true;
+
+        if (
+          hasFlag(districtType, DistrictType.TAVRICHESK) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.TAVRICHESK
+        )
+          return true;
+      } else {
+        return true;
+      }
+
+      return false;
     };
   }
 

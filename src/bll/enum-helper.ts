@@ -42,12 +42,48 @@ export default abstract class EnumHelper {
     
     public static readonly districtTypeMap: Map<number, string> = new Map<number, string>([
         [DistrictType.NONE, Constants.STRING_EMPTY],
-        [DistrictType.TAVRICHESK, Constants.TAVRICHESK],
-        [DistrictType.CENTER, Constants.CENTER],
-        [DistrictType.ZHILPOSELOK, Constants.ZHILPOSELOK],
-        [DistrictType.OSTROV, Constants.OSTROV],
-        [DistrictType.SHUMENSKIY, Constants.SHUMENSKIY],
-        [DistrictType.HBK, Constants.HBK],
+        [DistrictType.VOENKA, Constants.SUB_DISTRICT.VOENKA],
+        [DistrictType.VOSTOCHNIY, Constants.SUB_DISTRICT.VOSTOCHNIY],
+        [DistrictType.KINDIYKA, Constants.SUB_DISTRICT.KINDIYKA],
+        [DistrictType.STEKLOTARA, Constants.SUB_DISTRICT.STEKLOTARA],
+        [DistrictType.TEKSTILNIY, Constants.SUB_DISTRICT.TEKSTILNIY],
+        [DistrictType.HBK, Constants.SUB_DISTRICT.HBK],
+        [DistrictType.ZHILMASIV, Constants.SUB_DISTRICT.ZHILMASIV],
+        [DistrictType.ZHILPOSELOK, Constants.SUB_DISTRICT.ZHILPOSELOK],
+        [DistrictType.ZABALKA, Constants.SUB_DISTRICT.ZABALKA],
+        [DistrictType.NEFTEGAVAN, Constants.SUB_DISTRICT.NEFTEGAVAN],
+        [DistrictType.OSTROV, Constants.SUB_DISTRICT.OSTROV],
+        [DistrictType.PORT, Constants.SUB_DISTRICT.PORT],
+        [DistrictType.PORT_ELEVATOR, Constants.SUB_DISTRICT.PRIVOKZALNIY],
+        [DistrictType.PRIVOKZALNIY, Constants.SUB_DISTRICT.PRIVOKZALNIY],
+        [DistrictType.SHUMSKIY, Constants.SUB_DISTRICT.SHUMSKIY],
+        [DistrictType.MELNIZA, Constants.SUB_DISTRICT.MELNIZA],
+        [DistrictType.SEVERNIY, Constants.SUB_DISTRICT.SEVERNIY],
+        [DistrictType.CENTR, Constants.SUB_DISTRICT.CENTR],
+        [DistrictType.TAVRICHESK, Constants.SUB_DISTRICT.TAVRICHESK]
+    ]);
+
+    public static readonly ligaProDistrictMap: Map<string, string> = new Map<string, string>([
+        [Constants.STRING_EMPTY, Constants.STRING_EMPTY],
+        [Constants.LIGA_PRO.SUB_DISTRICT.VOENKA, Constants.SUB_DISTRICT.VOENKA],
+        [Constants.LIGA_PRO.SUB_DISTRICT.VOSTOCHNIY, Constants.SUB_DISTRICT.VOSTOCHNIY],
+        [Constants.LIGA_PRO.SUB_DISTRICT.KINDIYKA, Constants.SUB_DISTRICT.KINDIYKA],
+        [Constants.LIGA_PRO.SUB_DISTRICT.STEKLOTARA, Constants.SUB_DISTRICT.STEKLOTARA],
+        [Constants.LIGA_PRO.SUB_DISTRICT.TEKSTILNIY, Constants.SUB_DISTRICT.TEKSTILNIY],
+        [Constants.LIGA_PRO.SUB_DISTRICT.HBK, Constants.SUB_DISTRICT.HBK],
+        [Constants.LIGA_PRO.SUB_DISTRICT.ZHILMASIV, Constants.SUB_DISTRICT.ZHILMASIV],
+        [Constants.LIGA_PRO.SUB_DISTRICT.ZHILPOSELOK, Constants.SUB_DISTRICT.ZHILPOSELOK],
+        [Constants.LIGA_PRO.SUB_DISTRICT.ZABALKA, Constants.SUB_DISTRICT.ZABALKA],
+        [Constants.LIGA_PRO.SUB_DISTRICT.NEFTEGAVAN, Constants.SUB_DISTRICT.NEFTEGAVAN],
+        [Constants.LIGA_PRO.SUB_DISTRICT.OSTROV, Constants.SUB_DISTRICT.OSTROV],
+        [Constants.LIGA_PRO.SUB_DISTRICT.PORT, Constants.SUB_DISTRICT.PORT],
+        [Constants.LIGA_PRO.SUB_DISTRICT.PORT_ELEVATOR, Constants.SUB_DISTRICT.PRIVOKZALNIY],
+        [Constants.LIGA_PRO.SUB_DISTRICT.PRIVOKZALNIY, Constants.SUB_DISTRICT.PRIVOKZALNIY],
+        [Constants.LIGA_PRO.SUB_DISTRICT.SHUMSKIY, Constants.SUB_DISTRICT.SHUMSKIY],
+        [Constants.LIGA_PRO.SUB_DISTRICT.MELNIZA, Constants.SUB_DISTRICT.MELNIZA],
+        [Constants.LIGA_PRO.SUB_DISTRICT.SEVERNIY, Constants.SUB_DISTRICT.SEVERNIY],
+        [Constants.LIGA_PRO.SUB_DISTRICT.CENTR, Constants.SUB_DISTRICT.CENTR],
+        [Constants.LIGA_PRO.SUB_DISTRICT.TAVRICHESK, Constants.SUB_DISTRICT.TAVRICHESK]
     ]);
     
     public static propertyEnumToString(value: PropertyType): string {
