@@ -13,21 +13,21 @@ export function initialize(): BotSession {
     id: 0,
     isBot: false,
     firstName: '',
-    lastName: undefined,
-    username: undefined,
+    lastName: '',
+    username: '',
     propertyType: PropertyType.NONE,
     roomType: RoomType.NONE,
     districtType: DistrictType.NONE,
     priceType: PriceType.NONE,
     apartmentPriceType: ApartmentPriceType.NONE,
     menuStep: MenuStep.PROPERTY,
-    isActive: true,
+    isActive: false,
     startTS: new Date(),
     lastUpdateTS: new Date(),
     notifiedAtTS: undefined,
     phoneNumber: undefined,
     chatId: 0,
-    items: []
+    itemIds: []
   };
 }
 
