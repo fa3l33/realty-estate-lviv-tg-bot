@@ -1,4 +1,4 @@
-import { LigaProLotArea } from "./liga-pro-lot-area.type";
+import { LigaProArea } from "./liga-pro-lot-area.type";
 import { LigaProItem } from "./liga-pro-item.type";
 import { LigaProPrice } from "./liga-pro-price.type";
 import { LigaProLocation } from "./liga-pro-location.type";
@@ -19,6 +19,9 @@ export default class LigaProItemDTO {
     this["type"] = item["type"];
     this.url = item.url;
     this["lot-area"] = item["lot-area"];
+    this.area = item.area;
+    this['living-space'] = item['living-space'];
+    this['kitchen-space'] = item['kitchen-space'];
   }
 
   _attributes: {
@@ -38,7 +41,10 @@ export default class LigaProItemDTO {
   title: LigaProValue[];
   "type": LigaProValue[];
   url: LigaProValue[];
-  "lot-area": LigaProLotArea[];
+  "lot-area": LigaProArea[];
+  area: LigaProArea[];
+  'living-space': LigaProArea[];
+  'kitchen-space': LigaProArea[]
 
   getInternalId(): string {
     return this._attributes["internal-id"];
@@ -160,6 +166,7 @@ export default class LigaProItemDTO {
 
     return "";
   }
+
   getTitle(): string {
     if (this.title && this.title.length && this.title[0]._text.length) {
       return this.title[0]._text[0];
@@ -222,6 +229,96 @@ export default class LigaProItemDTO {
       this["lot-area"][0].unit[0]._text.length
     ) {
       return this["lot-area"][0].unit[0]._text[0];
+    }
+
+    return "";
+  }
+  
+  getAreaValue() {
+    if (
+      this["area"] &&
+      this["area"].length &&
+      this["area"][0].value &&
+      this["area"][0].value.length &&
+      this["area"][0].value[0]._text &&
+      this["area"][0].value[0]._text.length
+    ) {
+      return this["area"][0].value[0]._text[0];
+    }
+
+    return "";
+  }
+
+  getAreaUnit() {
+    if (
+      this["area"] &&
+      this["area"].length &&
+      this["area"][0].unit &&
+      this["area"][0].unit.length &&
+      this["area"][0].unit[0]._text &&
+      this["area"][0].unit[0]._text.length
+    ) {
+      return this["area"][0].unit[0]._text[0];
+    }
+
+    return "";
+  }
+
+  getLivingSpaceValue() {
+    if (
+      this["living-space"] &&
+      this["living-space"].length &&
+      this["living-space"][0].value &&
+      this["living-space"][0].value.length &&
+      this["living-space"][0].value[0]._text &&
+      this["living-space"][0].value[0]._text.length
+    ) {
+      return this["living-space"][0].value[0]._text[0];
+    }
+
+    return "";
+  }
+
+  getLivingSpaceUnit() {
+    if (
+      this["living-space"] &&
+      this["living-space"].length &&
+      this["living-space"][0].unit &&
+      this["living-space"][0].unit.length &&
+      this["living-space"][0].unit[0]._text &&
+      this["living-space"][0].unit[0]._text.length
+    ) {
+      return this["living-space"][0].unit[0]._text[0];
+    }
+
+    return "";
+  }
+
+  getKitchenSpaceValue() {
+    if (
+      this["kitchen-space"] &&
+      this["kitchen-space"].length &&
+      this["kitchen-space"][0].value &&
+      this["kitchen-space"][0].value.length &&
+      this["kitchen-space"][0].value[0]._text &&
+      this["kitchen-space"][0].value[0]._text.length
+    ) {
+      return this["kitchen-space"][0].value[0]._text[0];
+    }
+
+    return "";
+  }
+
+  getKitchenSpaceUnit() {
+    if (
+      this["kitchen-space"] &&
+      this["kitchen-space"].length &&
+      this["kitchen-space"][0].unit &&
+      this["kitchen-space"][0].unit.length &&
+      this["kitchen-space"][0].unit[0]._text &&
+      this["kitchen-space"][0].unit[0]._text.length
+    ) {
+      return this["kitchen-space"][0].unit[0]._text[0];
     }
 
     return "";

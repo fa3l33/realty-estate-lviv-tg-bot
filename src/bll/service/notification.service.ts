@@ -69,13 +69,13 @@ export default class NotificationService implements INotificationService {
               .filter(this._itemFilterService.byPrice(user))
               .filter(this._itemFilterService.byDistrict(user));
 
-              let delay: number = 300;
+              let delay: number = 0;  
               // TODO: RESOLVE ORDER ISSUE
               // for await...of
               notifyItems.forEach((item) => {
                   var notifyTimeout = setTimeout(() => this._messageService.postItem(item, user.chatId, user.id), delay);
                   Promise.allSettled([notifyTimeout]);
-                  delay += 500;
+                  delay += 1500;
               });
       
               if (notifyItems.length) {

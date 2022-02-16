@@ -15,18 +15,18 @@ export abstract class MessageBuilder {
     }
 
     itemInfo +=
-      this.buildProperty(item.getPriceUSD(), "Вартість (usd):") +
-      this.buildProperty(item.getType(), "Рубрика:") +
-      this.buildProperty(item.getRoomsCount(), "Кількість кімнат:") +
-      this.buildProperty(item.getFloor(), "Поверх:") +
-      this.buildProperty(item.getFloorTotal(), "Поверхів в будівлі:") +
-      // + this.buildProperty(item.getArea, "Площа ділянки:")
-      // + this.buildProperty(item.getTotalArea, "Загальні площа:")
-      // + this.buildProperty(item.getLivaArea(), "Житлова площа:")
-      // + this.buildProperty(item.getKetchenArea, "Площа кухні:")
-      this.buildProperty(item.getSubLocalityName(), "Мікрорайон:") +
-      `\n` +
-      this.getSiteURL(item.getURL());
+      this.buildProperty(item.getPriceUSD(), "Вартість (usd):")
+      + this.buildProperty(item.getType(), "Рубрика:")
+      + this.buildProperty(item.getRoomsCount(), "Кількість кімнат:")
+      + this.buildProperty(item.getFloor(), "Поверх:")
+      + this.buildProperty(item.getFloorTotal(), "Поверхів в будівлі:")
+      + this.buildProperty(item.getLotAreaValue() + ' ' + item.getLotAreaUnit(), "Площа ділянки:")
+      + this.buildProperty(item.getAreaValue() + ' ' + item.getAreaUnit(), "Загальні площа:")
+      + this.buildProperty(item.getLivingSpaceValue() + ' ' + item.getLivingSpaceUnit(), "Житлова площа:")
+      + this.buildProperty(item.getKitchenSpaceValue() + ' ' + item.getKitchenSpaceUnit(), "Площа кухні:")
+      + this.buildProperty(EnumHelper.ligaProDistrictMap.get(item.getSubLocalityName()) || '', "Мікрорайон:")
+      + `\n`
+      + this.getSiteURL(item.getURL());
 
     return itemInfo;
   }
@@ -85,7 +85,7 @@ export abstract class MessageBuilder {
   }
 
   private static buildProperty(value: string, label: string) {
-    if (value !== undefined) {
+    if (value !== undefined && value.trim()) {
       return `${TextUtils.toBold(label)} ${value}\n`;
     }
 

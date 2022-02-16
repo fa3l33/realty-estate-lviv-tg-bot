@@ -1,4 +1,4 @@
-import { LigaProLotArea } from './liga-pro-lot-area.type';
+import { LigaProArea } from './liga-pro-lot-area.type';
 import { LigaProLocation } from "./liga-pro-location.type";
 import { LigaProPrice } from "./liga-pro-price.type";
 import { LigaProValue } from "./liga-pro-value.type";
@@ -21,5 +21,8 @@ export type LigaProItem = {
     title: LigaProValue[];
     'type': LigaProValue[];
     url: LigaProValue[];
-    'lot-area': LigaProLotArea[]
+    'lot-area': LigaProArea[]
+    area: LigaProArea[],
+    'living-space': LigaProArea[],
+    'kitchen-space': LigaProArea[],
 }
