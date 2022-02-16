@@ -11,6 +11,8 @@ import Menu from "./menu";
 
 export default class PropertyMenu extends Menu implements IMenu {
   getMenu(userSession: BotSession): Keyboard {
+    userSession.menuStep = MenuStep.PROPERTY;
+      
     return new Keyboard()
       .text(
         buildCheckedMenu(

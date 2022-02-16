@@ -11,6 +11,7 @@ import Menu from './menu';
 
 export class DistrictMenu extends Menu implements IMenu {
   getMenu(userSession: BotSession): Keyboard {
+    userSession.menuStep = MenuStep.DISTRICT;
     return new Keyboard()
     .text(
       buildCheckedMenu(

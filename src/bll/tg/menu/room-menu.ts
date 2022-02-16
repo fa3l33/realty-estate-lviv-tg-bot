@@ -11,6 +11,7 @@ import Menu from './menu';
 
 export default class  RoomMenu extends Menu implements IMenu {
   getMenu(userSession: BotSession): Keyboard {
+    userSession.menuStep = MenuStep.ROOM;
     return new Keyboard()
     .text(buildCheckedMenu(Constants.ONE, userSession.roomType, RoomType.ONE))
     .text(buildCheckedMenu(Constants.TWO, userSession.roomType, RoomType.TWO))
