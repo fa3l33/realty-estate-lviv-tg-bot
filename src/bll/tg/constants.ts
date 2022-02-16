@@ -3,7 +3,7 @@ export default abstract class Constants {
   public static readonly NEW_BUILDING: string = "Новобудови";
   public static readonly APARTMENT: string = "Квартири";
   public static readonly HOUSE: string = "Будинки";
-  public static readonly LAND: string = "Земля";
+  public static readonly LAND: string = "Земельна Ділянка";
   public static readonly COMMERCIAL: string = "Комерція";
   public static readonly ONE: string = "1";
   public static readonly TWO: string = "2";
@@ -24,6 +24,27 @@ export default abstract class Constants {
     FROM_60_TO_100: "Від $60 тис. до $100 тис.",
     FROM_100_AND_MORE: "Від $100 тис. і більше",
   };
+
+  public static readonly LIGA_PRO = {
+    DISTRICT: {
+    DNIPROVSKIY: "Днепровский",
+    KORABELNIY: "Корабельный",
+    SUVOROVSKIY: "Суворовский"
+  },
+
+  CATEGORY: {
+    APARTMENT: 'квартира',
+    COMMERCIAL: 'коммерция',
+    HOUSE: 'дом',
+    LAND: 'участок'
+  },
+
+  TYPE: {
+    SALE: 'продажа',
+    RENT: 'аренда',
+  }
+};
+  
   public static readonly APARTMENT_PRICES: ApartmentPrices = {
     FROM_20_TO_35: "Від $20 тис. до $35 тис.",
     FROM_35_TO_45: "Від $35 тис. до $45 тис.",

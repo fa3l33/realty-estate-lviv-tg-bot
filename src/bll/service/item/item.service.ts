@@ -1,37 +1,36 @@
-import { Repository, getRepository } from 'typeorm';
-import { Item } from '../../../dal/model/rg_zoo/item';
+import ILigaProPortingService from '../iligapro-porting.service';
 import IItemService from "./iitem.service";
+import dayjs = require('dayjs');
+import LigaProItemDTO from '../../dto/liga-pro-item.dto';
 
 export default class ItemService implements IItemService {
-  _itemRepository: Repository<Item>;
+  private readonly _ligaProPortingService: ILigaProPortingService;
 
-  constructor() {
-    this._itemRepository = getRepository(Item);
+  constructor(ligaProPortingService: ILigaProPortingService) {
+    this._ligaProPortingService = ligaProPortingService;
   }
 
-  public async getById(id: number) : Promise<Item | undefined> {
-    return this._itemRepository.findOne(id, {
-      relations: ["categories"]
-    });
+  public getById(id: number) : LigaProItemDTO | undefined {
+    var itemsMap: Map<string, LigaProItemDTO> = this._ligaProPortingService.getItems();
+    return itemsMap.get(id.toString());
   }
 
   /**
    * getNotificationItems
    */
-  public getNotificationItems(filterDateUnix: number): Promise<Item[]> {
+  public getNotificationItems(filterDateUnix: number): LigaProItemDTO[] {
     // todo: move to repository
-    return this._itemRepository
-      .createQueryBuilder("item")
-      .innerJoinAndSelect("item.categories", "categories")
-      .where(
-        "item.type = :filterType AND UNIX_TIMESTAMP(item.created) > :filterDate" +
-          " AND (SELECT rg_zoo_category_item.item_id FROM rg_zoo_category_item as rg_zoo_category_item WHERE rg_zoo_category_item.category_id = :filterCategoryId AND rg_zoo_category_item.item_id = item.id) IS NOT NULL",
-        {
-          filterDate: filterDateUnix,
-          filterType: "realtyobject",
-          filterCategoryId: 24,   // site filter
-        }
-      )
-      .getMany();
+    const itemsMap: Map<string, LigaProItemDTO> = this._ligaProPortingService.getItems();
+    let items: LigaProItemDTO[] = [];
+
+    for (const item of itemsMap.values()) {
+      let creationDate = dayjs(item['creation-date'][0]._text[0]);
+
+      if (creationDate.unix() > filterDateUnix) {
+        items.push(item);
+      }
+    }
+
+    return items;
   }
 }

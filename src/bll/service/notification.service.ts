@@ -1,6 +1,6 @@
 import { filterAsync } from "../../common/array-utils";
-import { Item } from "../../dal/model/rg_zoo/item";
 import { User } from "../../dal/model/tg/user";
+import LigaProItemDTO from "../dto/liga-pro-item.dto";
 import logger from "../logger";
 import IMessageService from "./imessage.service";
 import INotificationService from "./inotification.service";
@@ -34,8 +34,8 @@ export default class NotificationService implements INotificationService {
                 const users = usersPromise.value;
                 const items = itemsPromise.value;
 
-                users.forEach((user) => {
-                        this.notify(user, items);
+                users.forEach(async (user) => {
+                  await this.notify(user, items);
                 });
             } else {
                 logger.fatal('Unable to get users or items.');
@@ -60,17 +60,22 @@ export default class NotificationService implements INotificationService {
         });
       }
 
-    private async notify(user: User | undefined, items: Item[]) : Promise<void> {
+    private async notify(user: User | undefined, items: LigaProItemDTO[]) : Promise<void> {
         if (user && items && items.length) {
             filterAsync(items, this._itemFilterService.bySeenItems(user)).then(result => {
               const notifyItems = result.filter(this._itemFilterService.byType)
-                .filter(this._itemFilterService.byProperty(user))
-                .filter(this._itemFilterService.byRoomsCount(user))
-                .filter(this._itemFilterService.byPrice(user))
-                .filter(this._itemFilterService.byDistrict(user));
-        
-              notifyItems.forEach(item => { 
-                this._messageService.postItem(item, user.chatId, user.id);
+              .filter(this._itemFilterService.byProperty(user))
+              .filter(this._itemFilterService.byRoomsCount(user))
+              .filter(this._itemFilterService.byPrice(user))
+              .filter(this._itemFilterService.byDistrict(user));
+
+              let delay: number = 300;
+              // TODO: RESOLVE ORDER ISSUE
+              // for await...of
+              notifyItems.forEach((item) => {
+                  var notifyTimeout = setTimeout(() => this._messageService.postItem(item, user.chatId, user.id), delay);
+                  Promise.allSettled([notifyTimeout]);
+                  delay += 500;
               });
       
               if (notifyItems.length) {

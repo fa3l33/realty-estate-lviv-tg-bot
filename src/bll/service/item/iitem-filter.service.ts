@@ -1,11 +1,11 @@
 import { User } from '../../../dal/model/tg/user';
-import { Item } from '../../../dal/model/rg_zoo/item';
+import LigaProItemDTO from '../../dto/liga-pro-item.dto';
 
 export default interface IItemFilterService {
-    byType(item: Item) : boolean;
-    byProperty(user: User) : (item: Item) => boolean;
-    byRoomsCount(user: User) : (item: Item) => boolean;
-    byPrice(user: User) : (item: Item) => boolean;
-    byDistrict(user: User) : (item: Item) => boolean;
-    bySeenItems(user: User): (item: Item) => Promise<boolean>;
+    byType(item: LigaProItemDTO) : boolean;
+    byProperty(user: User) : (item: LigaProItemDTO) => boolean;
+    byRoomsCount(user: User) : (item: LigaProItemDTO) => boolean;
+    byPrice(user: User) : (item: LigaProItemDTO) => boolean;
+    byDistrict(user: User) : (item: LigaProItemDTO) => boolean;
+    bySeenItems(user: User): (item: LigaProItemDTO) => Promise<boolean>;
 }

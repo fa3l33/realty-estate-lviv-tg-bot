@@ -1,6 +1,6 @@
-import { Item } from '../../../dal/model/rg_zoo/item';
+import LigaProItemDTO from '../../dto/liga-pro-item.dto';
 
 export default interface IItemService {
-    getNotificationItems(filterDateUnix: number): Promise<Item[]>;
-    getById(id: number) : Promise<Item | undefined>;
+    getNotificationItems(filterDateUnix: number): LigaProItemDTO[]
+    getById(id: number) : LigaProItemDTO | undefined;
 }
