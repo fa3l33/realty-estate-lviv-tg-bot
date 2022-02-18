@@ -247,8 +247,6 @@ export default class ItemFilterService implements IItemFilterService {
           district === Constants.LIGA_PRO.SUB_DISTRICT.TAVRICHESK
         )
           return true;
-      } else {
-        return true;
       }
 
       return false;
@@ -276,20 +274,23 @@ export default class ItemFilterService implements IItemFilterService {
       // nothing selected
       if (priceType === PriceType.NONE) return true;
 
-      if (hasFlag(priceType, PriceType.FROM_20_TO_40) && price < 40000)
+      if (hasFlag(priceType, PriceType.FROM_20_TO_40) && price >= 20000 && price < 40000)
         return true;
+
       if (
         hasFlag(priceType, PriceType.FROM_40_TO_60) &&
         price >= 40000 &&
         price < 60000
       )
         return true;
+
       if (
         hasFlag(priceType, PriceType.FROM_60_TO_100) &&
         price >= 60000 &&
         price < 100000
       )
         return true;
+
       if (
         hasFlag(priceType, PriceType.FROM_100_AND_MORE) &&
         price >= 100000
@@ -303,21 +304,24 @@ export default class ItemFilterService implements IItemFilterService {
     if (apartmentPriceType === ApartmentPriceType.NONE) return true;
     if (
       hasFlag(apartmentPriceType, ApartmentPriceType.FROM_20_TO_35) &&
-      price < 35000
+      price >= 20000 && price < 35000
     )
       return true;
+
     if (
       hasFlag(apartmentPriceType, ApartmentPriceType.FROM_35_TO_45) &&
       price >= 35000 &&
       price < 45000
     )
       return true;
+
     if (
       hasFlag(apartmentPriceType, ApartmentPriceType.FROM_45_TO_60) &&
       price >= 45000 &&
       price < 60000
     )
       return true;
+
     if (
       hasFlag(apartmentPriceType, ApartmentPriceType.FROM_60_AND_MORE) &&
       price >= 60000

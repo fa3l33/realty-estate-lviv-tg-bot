@@ -75,7 +75,7 @@ export default class NotificationService implements INotificationService {
               notifyItems.forEach((item) => {
                   var notifyTimeout = setTimeout(() => this._messageService.postItem(item, user.chatId, user.id), delay);
                   Promise.allSettled([notifyTimeout]);
-                  delay += 1500;
+                  delay += 2500;
               });
       
               if (notifyItems.length) {

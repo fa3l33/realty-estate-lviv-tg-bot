@@ -110,8 +110,9 @@ export default class MessageService implements IMessageService {
       }
     } else {
       logger.error(
-        "Unable to send interested in notification. User or manager not found. UserId: %s, Manager phone: ",
-        userId
+        "Unable to send interested in notification. User or manager not found. UserId: %s, Manager phone: %",
+        userId,
+        config.realtyGroup.MANAGER_PHONE
       );
     }
   }
