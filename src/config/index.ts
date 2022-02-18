@@ -4,13 +4,12 @@ config()
 
 export default {
     telegram: {
-        BOT_SECRET_KEY: process.env.TG_BOT_SECRET_KEY
+        BOT_SECRET_KEY: process.env.TG_BOT_SECRET_KEY,
+        BOT_NAME: process.env.TG_BOT_NAME || ''
     },
     realtyGroup: {
-        SITE_URL: process.env.RG_SITE_URL,
-        ITEM_URL: process.env.RG_ITEM_URL,
-        MANAGER_PHONE: process.env.RG_MANAGER_PHONE,
-        PHOTOS_URL: process.env.RG_PHOTOS_URL
+        SITE_URL: process.env.RG_SITE_URL || '',
+        MANAGER_PHONE: process.env.RG_MANAGER_PHONE || '',
     },
     isProduction: process.env.IS_PRODUCTION,
     db_type: process.env.DB_TYPE,
