@@ -39,7 +39,7 @@ export default class CommandHandler {
     userSession.isActive = false;
 
     ctx.reply(
-      "Робота бота призупинена. Для активації бота скористайтесь командою '/filter'.",
+      "Робота бота призупинена. Для активації бота скористайтесь командою /filter.",
       {
         reply_markup: {
           remove_keyboard: true,
@@ -50,11 +50,13 @@ export default class CommandHandler {
 
   private help(ctx: SessionContextFlavor): void {
     ctx.reply(
-      `${TextUtils.toBold(TextUtils.toUnderline("REALTY GROUP"))}\n\n` +
-        `${TextUtils.toBold("Адреса")}\n` +
-        `м. Херсон, вул. Театральна, 17`,
+      `Для отримання додаткової інформації зателефонуйте нам, ${config.realtyGroup.MANAGER_PHONE}, або скористайтесь формою для заявок ${TextUtils.toBold(TextUtils.toLink("Залишити заявку", config.realtyGroup.SITE_URL + '/ostavit_zayavku'))}.\n\n` +
+        `${TextUtils.toBold("Наша адреса:")}\n`
+        + `м. Херсон, вул. Театральна, 17\n`
+        + `тел. ${config.realtyGroup.MANAGER_PHONE}`,
       {
         parse_mode: "HTML",
+        disable_web_page_preview: true,
         reply_markup: {
           remove_keyboard: true,
         },
@@ -64,7 +66,7 @@ export default class CommandHandler {
     let chatId = Number(ctx.chat?.id);
     ctx.api.sendContact(
       chatId,
-      config.realtyGroup.MANAGER_PHONE as string,
+      config.realtyGroup.MANAGER_PHONE,
       "Realty Group"
     );
   }
@@ -74,8 +76,17 @@ export default class CommandHandler {
     mapFromToSession(userSession, ctx.from, ctx.chat);
 
     ctx.reply(
-      "Thanks that you have chosen to use this bot, we will try to make it useful for you. Start working with bot by creating a new filter by using 'filter' command.",
+      TextUtils.toBold(config.telegram.BOT_NAME)
+       + " – це бот, компанії " + TextUtils.toLink(TextUtils.toBold('Realty Group'), config.realtyGroup.SITE_URL)
+       + ", що допоможе Вам отримувати нові пропозиції щодо нерухомості у місті Херсон."
+       + " Для початку роботи скористайтесь командою /filter та завершіть налаштування."
+       + " Бот повідомить про актуальні пропозиції за останні пів року та буде надсилати нові актуальні пропозиції щоденно."
+       + " Для припинення роботи боту скористайтесь командою /cancel."
+       + " Для повторної активації боту скористайтесь командою /filter та завершіть налаштування."
+       + " Для отримання додаткової інформації щодо компанії та підтримки скористуйтесь командою /help.",
       {
+        parse_mode: "HTML",
+        disable_web_page_preview: true,
         reply_markup: {
           remove_keyboard: true,
         },
@@ -87,6 +98,13 @@ export default class CommandHandler {
     ctx: SessionContextFlavor,
     menuComposer: MenuComposer
   ): Promise<void> {
+    const userSession = await ctx.session;
+
+    // user may start bot from filter command, if not active - initialize user
+    if (!userSession.isActive) {
+      mapFromToSession(userSession, ctx.from, ctx.chat);
+    }
+
     menuComposer.sendDefaultMenu(ctx);
   }
 }

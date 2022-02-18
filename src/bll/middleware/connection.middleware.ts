@@ -1,4 +1,5 @@
 import { Context, MiddlewareFn, MiddlewareObj, NextFunction } from "grammy";
+import config from "../../config";
 import logger from "../logger";
 import IMessageService from "../service/imessage.service";
 import Constants from "../tg/constants";
@@ -41,7 +42,7 @@ export default class ConnectionMiddleware implements MiddlewareObj {
 
           this._messageService.notifyInterestedIn(userSession.id, false);
         } else {
-          ctx.reply("Для можливості менеджеру надсилати Вам повідомлення ваш особливий облік в Telegram повинен мати username. Створіть username та спробуйте ще раз.", {
+          ctx.reply("На жаль ми не маємо можливості з вами зв'язатися, але Ви можете зателефонувати нам за номером " + config.realtyGroup.MANAGER_PHONE, {
             reply_markup: { remove_keyboard: true },
           });  
 

@@ -31,7 +31,7 @@ export abstract class MessageBuilder {
     return itemInfo;
   }
 
-  public static buildFilter(userSession: BotSession) {
+  public static buildFilter(userSession: BotSession) : string {
     let filter =
       `${TextUtils.toBold("Налаштування")} \n\n` +
       `${TextUtils.toBold(
@@ -71,9 +71,9 @@ export abstract class MessageBuilder {
 
     if (isPhoneResponse) {
       if (shouldContactToday) {
-        return "Ми зателефонуємо Вам найближчим часом протягом 1 години.";
+        return "Наш менеджер зателефонує Вам протягом 1 години.";
       } else {
-        return "Ми зателефонуємо Вам завтра з 9 години.";
+        return "Наш менеджер зателефонує Вам завтра з 9 години.";
       }
     } else {
       if (shouldContactToday) {
@@ -84,7 +84,7 @@ export abstract class MessageBuilder {
     }
   }
 
-  private static buildProperty(value: string, label: string) {
+  private static buildProperty(value: string, label: string) : string {
     if (value !== undefined && value.trim()) {
       return `${TextUtils.toBold(label)} ${value}\n`;
     }

@@ -10,7 +10,7 @@ export default abstract class MarkupManager {
   ): InlineKeyboard {
     return new InlineKeyboard()
       .text("Детальніше", TextUtils.getDetailsData(userId, itemId))
-      .text("Оператор", TextUtils.getManagerData(userId, itemId));
+      .text("Зацікавило", TextUtils.getManagerData(userId, itemId));
   }
 
   public static getConnectionK() : ReplyKeyboardMarkup {
