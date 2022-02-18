@@ -50,13 +50,13 @@ export default class CommandHandler {
 
   private help(ctx: SessionContextFlavor): void {
     ctx.reply(
-      `Для отримання додаткової інформації зателефонуйте нам, ${config.realtyGroup.MANAGER_PHONE}, або скористайтесь формою для заявок ${TextUtils.toBold(TextUtils.toLink("Залишити заявку", config.realtyGroup.SITE_URL + '/ostavit_zayavku'))}.\n\n` +
+      `Для отримання додаткової інформації зателефонуйте нам або скористайтесь формою для заявок ${TextUtils.toBold(TextUtils.toLink("Залишити заявку", config.realtyGroup.SITE_URL + '/ostavit_zayavku'))}.\n\n` +
         `${TextUtils.toBold("Наша адреса:")}\n`
         + `м. Херсон, вул. Театральна, 17\n`
         + `тел. ${config.realtyGroup.MANAGER_PHONE}`,
       {
         parse_mode: "HTML",
-        disable_web_page_preview: true,
+        disable_web_page_preview: true, 
         reply_markup: {
           remove_keyboard: true,
         },
