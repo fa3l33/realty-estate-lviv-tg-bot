@@ -38,7 +38,7 @@ export default class NotificationService implements INotificationService {
                   await this.notify(user, items);
                 });
             } else {
-                logger.fatal('Unable to get users or items.');
+                logger.crit({message: 'Unable to get users or items.'});
             }
         });
       }
@@ -55,7 +55,7 @@ export default class NotificationService implements INotificationService {
             if (userPromise.status === 'fulfilled' && itemsPromise.status === 'fulfilled') {
                 this.notify(userPromise.value, itemsPromise.value)
             } else {
-                logger.fatal('Unable to get users or items.');
+                logger.crit({message: 'Unable to get users or items.'});
             }
         });
       }
@@ -81,9 +81,9 @@ export default class NotificationService implements INotificationService {
               if (notifyItems.length) {
                 this._userService.saveSeenItems(user, notifyItems);
               }
-            }).catch(error => logger.error(error, 'Unable to apply filters or save user seen items.'));
+            }).catch(error => logger.error({message: 'Unable to apply filters or save user seen items.', error: error}));
         } else {
-            logger.error('User or Items not defined. User: %user, %items', user, items);
+            logger.error({ message: 'User or Items not defined. User: %user, %items', user, items });
         }
     }
 }

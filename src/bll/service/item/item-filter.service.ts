@@ -201,12 +201,6 @@ export default class ItemFilterService implements IItemFilterService {
           return true;
 
         if (
-          hasFlag(districtType, DistrictType.PORT) &&
-          district === Constants.LIGA_PRO.SUB_DISTRICT.PORT
-        )
-          return true;
-
-        if (
           hasFlag(districtType, DistrictType.PORT_ELEVATOR) &&
           district === Constants.LIGA_PRO.SUB_DISTRICT.PORT_ELEVATOR
         )
@@ -219,8 +213,8 @@ export default class ItemFilterService implements IItemFilterService {
           return true;
 
         if (
-          hasFlag(districtType, DistrictType.SHUMSKIY) &&
-          district === Constants.LIGA_PRO.SUB_DISTRICT.SHUMSKIY
+          hasFlag(districtType, DistrictType.SHUMENSKIY) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.SHUMENSKIY
         )
           return true;
 
@@ -231,20 +225,14 @@ export default class ItemFilterService implements IItemFilterService {
           return true;
 
         if (
-          hasFlag(districtType, DistrictType.SEVERNIY) &&
-          district === Constants.LIGA_PRO.SUB_DISTRICT.SEVERNIY
+          hasFlag(districtType, DistrictType.SEVERNIY_TAVRICHESK) &&
+          district === Constants.LIGA_PRO.SUB_DISTRICT.SEVERNIY_TAVRICHESK
         )
           return true;
 
         if (
           hasFlag(districtType, DistrictType.CENTR) &&
           district === Constants.LIGA_PRO.SUB_DISTRICT.CENTR
-        )
-          return true;
-
-        if (
-          hasFlag(districtType, DistrictType.TAVRICHESK) &&
-          district === Constants.LIGA_PRO.SUB_DISTRICT.TAVRICHESK
         )
           return true;
       }

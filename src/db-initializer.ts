@@ -16,10 +16,11 @@ export default function initializeDataBase(): Promise<Connection> {
             "username": config.db_username,
             "password": config.db_password,
             "database": config.db_database,
-            "logging": true,
+            "logging": false,
             synchronize: false,
             entities: [User, Category, CategoryItem, Item]
             } as ConnectionOptions);
+
     } else {
         // read connection option from file
         return createConnection();

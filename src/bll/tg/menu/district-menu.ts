@@ -35,24 +35,20 @@ export class DistrictMenu extends Menu implements IMenu {
     Constants.SUB_DISTRICT.NEFTEGAVAN
   );
   private readonly CHECKED_OSTROV = addChecked(Constants.SUB_DISTRICT.OSTROV);
-  private readonly CHECKED_PORT = addChecked(Constants.SUB_DISTRICT.PORT);
   private readonly CHECKED_PORT_ELEVATOR = addChecked(
     Constants.SUB_DISTRICT.PORT_ELEVATOR
   );
   private readonly CHECKED_PRIVOKZALNIY = addChecked(
     Constants.SUB_DISTRICT.PRIVOKZALNIY
   );
-  private readonly CHECKED_SHUMSKIY = addChecked(
-    Constants.SUB_DISTRICT.SHUMSKIY
+  private readonly CHECKED_SHUMENSKIY = addChecked(
+    Constants.SUB_DISTRICT.SHUMENSKIY
   );
   private readonly CHECKED_MELNIZA = addChecked(Constants.SUB_DISTRICT.MELNIZA);
-  private readonly CHECKED_SEVERNIY = addChecked(
-    Constants.SUB_DISTRICT.SEVERNIY
+  private readonly CHECKED_SEVERNIY_TAVRICHESK = addChecked(
+    Constants.SUB_DISTRICT.SEVERNIY_TAVRICHESK
   );
   private readonly CHECKED_CENTR = addChecked(Constants.SUB_DISTRICT.CENTR);
-  private readonly CHECKED_TAVRICHESK = addChecked(
-    Constants.SUB_DISTRICT.TAVRICHESK
-  );
 
   getMenu(userSession: BotSession): Keyboard {
     userSession.menuStep = MenuStep.DISTRICT;
@@ -103,13 +99,6 @@ export class DistrictMenu extends Menu implements IMenu {
       .row()
       .text(
         buildCheckedMenu(
-          Constants.SUB_DISTRICT.ZHILMASIV,
-          userSession.districtType,
-          DistrictType.ZHILMASIV
-        )
-      )
-      .text(
-        buildCheckedMenu(
           Constants.SUB_DISTRICT.ZHILPOSELOK,
           userSession.districtType,
           DistrictType.ZHILPOSELOK
@@ -122,7 +111,6 @@ export class DistrictMenu extends Menu implements IMenu {
           DistrictType.ZABALKA
         )
       )
-      .row()
       .text(
         buildCheckedMenu(
           Constants.SUB_DISTRICT.NEFTEGAVAN,
@@ -130,6 +118,7 @@ export class DistrictMenu extends Menu implements IMenu {
           DistrictType.NEFTEGAVAN
         )
       )
+      .row()      
       .text(
         buildCheckedMenu(
           Constants.SUB_DISTRICT.OSTROV,
@@ -139,11 +128,18 @@ export class DistrictMenu extends Menu implements IMenu {
       )
       .text(
         buildCheckedMenu(
-          Constants.SUB_DISTRICT.PORT,
+          Constants.SUB_DISTRICT.SHUMENSKIY,
           userSession.districtType,
-          DistrictType.PORT
+          DistrictType.SHUMENSKIY
         )
       )
+      .text(
+        buildCheckedMenu(
+          Constants.SUB_DISTRICT.ZHILMASIV,
+          userSession.districtType,
+          DistrictType.ZHILMASIV
+        )
+      )      
       .row()
       .text(
         buildCheckedMenu(
@@ -154,24 +150,9 @@ export class DistrictMenu extends Menu implements IMenu {
       )
       .text(
         buildCheckedMenu(
-          Constants.SUB_DISTRICT.SEVERNIY,
-          userSession.districtType,
-          DistrictType.SEVERNIY
-        )
-      )
-      .text(
-        buildCheckedMenu(
           Constants.SUB_DISTRICT.CENTR,
           userSession.districtType,
           DistrictType.CENTR
-        )
-      )
-      .row()
-      .text(
-        buildCheckedMenu(
-          Constants.SUB_DISTRICT.PORT_ELEVATOR,
-          userSession.districtType,
-          DistrictType.PORT_ELEVATOR
         )
       )
       .text(
@@ -184,16 +165,16 @@ export class DistrictMenu extends Menu implements IMenu {
       .row()
       .text(
         buildCheckedMenu(
-          Constants.SUB_DISTRICT.SHUMSKIY,
+          Constants.SUB_DISTRICT.PORT_ELEVATOR,
           userSession.districtType,
-          DistrictType.SHUMSKIY
+          DistrictType.PORT_ELEVATOR
         )
       )
       .text(
         buildCheckedMenu(
-          Constants.SUB_DISTRICT.TAVRICHESK,
+          Constants.SUB_DISTRICT.SEVERNIY_TAVRICHESK,
           userSession.districtType,
-          DistrictType.TAVRICHESK
+          DistrictType.SEVERNIY_TAVRICHESK
         )
       )
       .row()
@@ -216,14 +197,12 @@ export class DistrictMenu extends Menu implements IMenu {
           Constants.SUB_DISTRICT.ZABALKA,
           Constants.SUB_DISTRICT.NEFTEGAVAN,
           Constants.SUB_DISTRICT.OSTROV,
-          Constants.SUB_DISTRICT.PORT,
           Constants.SUB_DISTRICT.PORT_ELEVATOR,
           Constants.SUB_DISTRICT.PRIVOKZALNIY,
-          Constants.SUB_DISTRICT.SHUMSKIY,
+          Constants.SUB_DISTRICT.SHUMENSKIY,
           Constants.SUB_DISTRICT.MELNIZA,
-          Constants.SUB_DISTRICT.SEVERNIY,
+          Constants.SUB_DISTRICT.SEVERNIY_TAVRICHESK,
           Constants.SUB_DISTRICT.CENTR,
-          Constants.SUB_DISTRICT.TAVRICHESK,
           this.CHECKED_VOENKA,
           this.CHECKED_VOSTOCHNIY,
           this.CHECKED_KINDIYKA,
@@ -235,14 +214,12 @@ export class DistrictMenu extends Menu implements IMenu {
           this.CHECKED_ZABALKA,
           this.CHECKED_NEFTEGAVAN,
           this.CHECKED_OSTROV,
-          this.CHECKED_PORT,
           this.CHECKED_PORT_ELEVATOR,
           this.CHECKED_PRIVOKZALNIY,
-          this.CHECKED_SHUMSKIY,
+          this.CHECKED_SHUMENSKIY,
           this.CHECKED_MELNIZA,
-          this.CHECKED_SEVERNIY,
+          this.CHECKED_SEVERNIY_TAVRICHESK,
           this.CHECKED_CENTR,
-          this.CHECKED_TAVRICHESK,
         ].includes(ctx.message.text);
       },
       async (ctx) => {
@@ -294,10 +271,6 @@ export class DistrictMenu extends Menu implements IMenu {
           case this.CHECKED_OSTROV:
             toggleDistrictFlag(userSession, DistrictType.OSTROV);
             break;
-          case Constants.SUB_DISTRICT.PORT:
-          case this.CHECKED_PORT:
-            toggleDistrictFlag(userSession, DistrictType.PORT);
-            break;
           case Constants.SUB_DISTRICT.PORT_ELEVATOR:
           case this.CHECKED_PORT_ELEVATOR:
             toggleDistrictFlag(userSession, DistrictType.PORT_ELEVATOR);
@@ -306,25 +279,21 @@ export class DistrictMenu extends Menu implements IMenu {
           case this.CHECKED_PRIVOKZALNIY:
             toggleDistrictFlag(userSession, DistrictType.PRIVOKZALNIY);
             break;
-          case Constants.SUB_DISTRICT.SHUMSKIY:
-          case this.CHECKED_SHUMSKIY:
-            toggleDistrictFlag(userSession, DistrictType.SHUMSKIY);
+          case Constants.SUB_DISTRICT.SHUMENSKIY:
+          case this.CHECKED_SHUMENSKIY:
+            toggleDistrictFlag(userSession, DistrictType.SHUMENSKIY);
             break;
           case Constants.SUB_DISTRICT.MELNIZA:
           case this.CHECKED_MELNIZA:
             toggleDistrictFlag(userSession, DistrictType.MELNIZA);
             break;
-          case Constants.SUB_DISTRICT.SEVERNIY:
-          case this.CHECKED_SEVERNIY:
-            toggleDistrictFlag(userSession, DistrictType.SEVERNIY);
+          case Constants.SUB_DISTRICT.SEVERNIY_TAVRICHESK:
+          case this.CHECKED_SEVERNIY_TAVRICHESK:
+            toggleDistrictFlag(userSession, DistrictType.SEVERNIY_TAVRICHESK);
             break;
           case Constants.SUB_DISTRICT.CENTR:
           case this.CHECKED_CENTR:
             toggleDistrictFlag(userSession, DistrictType.CENTR);
-            break;
-          case Constants.SUB_DISTRICT.TAVRICHESK:
-          case this.CHECKED_TAVRICHESK:
-            toggleDistrictFlag(userSession, DistrictType.TAVRICHESK);
             break;
         }
 

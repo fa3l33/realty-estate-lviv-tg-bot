@@ -73,7 +73,7 @@ export abstract class MessageBuilder {
       if (shouldContactToday) {
         return "Наш менеджер зателефонує Вам протягом 1 години.";
       } else {
-        return "Наш менеджер зателефонує Вам завтра з 9 години.";
+        return "Наш менеджер зателефонує Вам завтра після 9 години.";
       }
     } else {
       if (shouldContactToday) {

@@ -54,9 +54,7 @@ export default class ConnectionMiddleware implements MiddlewareObj {
         ctx.reply("Команда не підтримується.", {
           reply_markup: { remove_keyboard: true },
         });
-        logger.error(
-          `Unsupported "${ctx.message?.text}" handled by ConnectionMiddleware.`
-        );
+        logger.error( { message:  `Unsupported "${ctx.message?.text}" handled by ConnectionMiddleware.`});
       }
 
       await next();

@@ -1,14 +1,13 @@
-import pino, { Logger } from "pino";
+import { createLogger, Logger, transports } from "winston";
 import config from "../config";
 
-const logger: Logger = pino({
-    transport: {
-        target: "pino/file",
-        options: {
-            destination: config.log_folder,
-            mkdir: true,            
-        }
-    }
-});
+const logger: Logger = createLogger({
+    transports: [
+      new transports.File({
+           filename: 'error.log',
+           dirname: config.log_folder
+     })
+    ],
+  });
 
 export default logger;

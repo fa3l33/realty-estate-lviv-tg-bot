@@ -53,14 +53,12 @@ export default abstract class EnumHelper {
         [DistrictType.ZABALKA, Constants.SUB_DISTRICT.ZABALKA],
         [DistrictType.NEFTEGAVAN, Constants.SUB_DISTRICT.NEFTEGAVAN],
         [DistrictType.OSTROV, Constants.SUB_DISTRICT.OSTROV],
-        [DistrictType.PORT, Constants.SUB_DISTRICT.PORT],
         [DistrictType.PORT_ELEVATOR, Constants.SUB_DISTRICT.PRIVOKZALNIY],
         [DistrictType.PRIVOKZALNIY, Constants.SUB_DISTRICT.PRIVOKZALNIY],
-        [DistrictType.SHUMSKIY, Constants.SUB_DISTRICT.SHUMSKIY],
+        [DistrictType.SHUMENSKIY, Constants.SUB_DISTRICT.SHUMENSKIY],
         [DistrictType.MELNIZA, Constants.SUB_DISTRICT.MELNIZA],
-        [DistrictType.SEVERNIY, Constants.SUB_DISTRICT.SEVERNIY],
+        [DistrictType.SEVERNIY_TAVRICHESK, Constants.SUB_DISTRICT.SEVERNIY_TAVRICHESK],
         [DistrictType.CENTR, Constants.SUB_DISTRICT.CENTR],
-        [DistrictType.TAVRICHESK, Constants.SUB_DISTRICT.TAVRICHESK]
     ]);
 
     public static readonly ligaProDistrictMap: Map<string, string> = new Map<string, string>([
@@ -76,14 +74,12 @@ export default abstract class EnumHelper {
         [Constants.LIGA_PRO.SUB_DISTRICT.ZABALKA, Constants.SUB_DISTRICT.ZABALKA],
         [Constants.LIGA_PRO.SUB_DISTRICT.NEFTEGAVAN, Constants.SUB_DISTRICT.NEFTEGAVAN],
         [Constants.LIGA_PRO.SUB_DISTRICT.OSTROV, Constants.SUB_DISTRICT.OSTROV],
-        [Constants.LIGA_PRO.SUB_DISTRICT.PORT, Constants.SUB_DISTRICT.PORT],
         [Constants.LIGA_PRO.SUB_DISTRICT.PORT_ELEVATOR, Constants.SUB_DISTRICT.PRIVOKZALNIY],
         [Constants.LIGA_PRO.SUB_DISTRICT.PRIVOKZALNIY, Constants.SUB_DISTRICT.PRIVOKZALNIY],
-        [Constants.LIGA_PRO.SUB_DISTRICT.SHUMSKIY, Constants.SUB_DISTRICT.SHUMSKIY],
+        [Constants.LIGA_PRO.SUB_DISTRICT.SHUMENSKIY, Constants.SUB_DISTRICT.SHUMENSKIY],
         [Constants.LIGA_PRO.SUB_DISTRICT.MELNIZA, Constants.SUB_DISTRICT.MELNIZA],
-        [Constants.LIGA_PRO.SUB_DISTRICT.SEVERNIY, Constants.SUB_DISTRICT.SEVERNIY],
+        [Constants.LIGA_PRO.SUB_DISTRICT.SEVERNIY_TAVRICHESK, Constants.SUB_DISTRICT.SEVERNIY_TAVRICHESK],
         [Constants.LIGA_PRO.SUB_DISTRICT.CENTR, Constants.SUB_DISTRICT.CENTR],
-        [Constants.LIGA_PRO.SUB_DISTRICT.TAVRICHESK, Constants.SUB_DISTRICT.TAVRICHESK]
     ]);
     
     public static propertyEnumToString(value: PropertyType): string {

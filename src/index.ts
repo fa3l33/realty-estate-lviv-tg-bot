@@ -44,7 +44,7 @@ async function bootstrap() {
         return `${chat}_${user}`;
       }
       
-      logger.error(undefined, 'Unable to determine user from the context: %Ctx', ctx);
+      logger.error({ message: 'Unable to determine user from the context: %Ctx', error: ctx });
       return undefined;
     };
 
@@ -73,10 +73,10 @@ async function bootstrap() {
       new ItemFilterService(userService),
       itemService);
 
+      // get file on start
     ligaProPortingService.import();
-
     // create notification job class to schedule notifications
-    const itemNotificationService: INotificationJob = new NotificationJob(notificationService);
+    const itemNotificationService: INotificationJob = new NotificationJob(notificationService, ligaProPortingService);
     itemNotificationService.start();
 
     // register bot commands
@@ -95,7 +95,12 @@ async function bootstrap() {
     }).use(connectionMiddleware);
 
     bot.catch((error) => {
-      logger.error(error, 'Unexpected error.'); 
+      if (config.isProduction) {
+        logger.error({
+          message: 'Bot Error',
+          error: error
+        });
+      }
     });
 
     const runner = run(bot);
@@ -103,8 +108,17 @@ async function bootstrap() {
     // Stopping the bot when Node process
     // is about to be terminated
     const stopRunner = () => runner.isRunning() && runner.stop();
+
     process.once("SIGINT", stopRunner);
     process.once("SIGTERM", stopRunner);
+
+    if (config.isProduction) {
+      process.on("unhandledRejection", error => logger.error({
+        message: 'Unhandled Rejection',
+        error: error
+      }));
+      process.on("uncaughtException", error => logger.error({ message: 'Uncaught Rejection', error: error }));
+    }
 }
 
 bootstrap();

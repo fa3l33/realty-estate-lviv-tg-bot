@@ -24,7 +24,11 @@ export default class ItemService implements IItemService {
     let items: LigaProItemDTO[] = [];
 
     for (const item of itemsMap.values()) {
-      let creationDate = dayjs(item['creation-date'][0]._text[0]);
+      const creationDate = dayjs(item['creation-date'][0]._text[0]);
+
+      const creationDateUnix = creationDate.unix();
+      console.log(creationDateUnix);
+      console.log(creationDate.unix() > filterDateUnix);
 
       if (creationDate.unix() > filterDateUnix) {
         items.push(item);

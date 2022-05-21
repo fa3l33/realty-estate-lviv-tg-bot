@@ -20,14 +20,18 @@ export default class LigaProPortingService implements ILigaProPortingService {
   public import() {
     const writeStream = fs.createWriteStream(this._ligaProXMLPath, {
       flags: "w",
+      encoding: 'utf-8',
     });
+    writeStream.on('error', (error) => logger.error({
+      message: 'Unable to write data to the file.',
+      file: this._ligaProFileName,
+      error: error
+    }));
 
     writeStream.on("error", (error) =>
-      logger.error(
-        error,
-        "Something went wrong. Unable create or write to %fileName",
-        this._ligaProXMLPath
-      )
+      logger.error({ message: "Something went wrong. Unable create or write to %fileName",
+        file: this._ligaProXMLPath,
+        error: error })
     );
 
     http.get(
@@ -46,9 +50,9 @@ export default class LigaProPortingService implements ILigaProPortingService {
       xmlData = fs.readFileSync(this._ligaProXMLPath, "utf-8");
     } catch (error) {
       logger.error(
-        error,
-        "Unable to read file: %filePath",
-        this._ligaProXMLPath
+        { message:  "Unable to read file: %filePath",
+        file: this._ligaProXMLPath,
+        error: error}
       );
     }
 
@@ -64,7 +68,7 @@ export default class LigaProPortingService implements ILigaProPortingService {
           itemsMap.set(item._attributes['internal-id'], new LigaProItemDTO(item));
         });
     } else {
-        logger.warn('No items returned by reading liga pro xml file.');
+        logger.warn({message: 'No items returned by reading liga pro xml file.' });
     }
 
     return itemsMap;

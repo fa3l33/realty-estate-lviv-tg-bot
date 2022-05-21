@@ -45,7 +45,7 @@ export default class UserService implements IUserService {
 
         return user;
       } else {
-        logger.fatal("Unable to get users or items.");
+        logger.crit( {message: "Unable to get users or items." });
       }
 
       return undefined;
@@ -81,7 +81,7 @@ export default class UserService implements IUserService {
         .printSql()
         .execute();
     } else {
-      logger.error("Unable to find user by UserId: %UserId", user.id);
+      logger.error( {message:  "Unable to find user by UserId: %UserId", userId: user.id });
     }
   }
 }

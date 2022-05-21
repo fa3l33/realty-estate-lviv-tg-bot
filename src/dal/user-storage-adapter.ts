@@ -19,7 +19,7 @@ export class TypeOrmAdapter implements StorageAdapter<BotSession> {
     try {
       await this.repository.save(value);
     } catch (error) {
-      logger.error(error, 'User data cannot be saved.');
+      logger.error({ message: 'User data cannot be saved.', error: error });
     } 
   }
 

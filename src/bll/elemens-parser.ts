@@ -28,7 +28,7 @@ export default abstract class ElementParser {
           return values[this.FIRST_PROPERTY][this.VALUE] as string;
         }
     } catch (error) {
-      logger.error(error, "Unable to parser item's elements property.");
+      logger.error({ message: "Unable to parser item's elements property.", error: error });
     }
 
     return undefined;
@@ -49,7 +49,7 @@ export default abstract class ElementParser {
         return values[this.OPTION][this.FIRST_PROPERTY] as string;
       }
     } catch (error) {
-      logger.error(error, "Unable to parser item's elements property.");
+      logger.error( {message: "Unable to parser item's elements property.", error: error });
     }
 
     return undefined;
@@ -74,7 +74,7 @@ export default abstract class ElementParser {
         return elementsAsObj[ItemElementMap.get(itemElementType)!];
       }
     } catch (error) {
-      logger.error(error, "Unable to parser item's elements property.");
+      logger.error( {message:  "Unable to parser item's elements property.", error: error} );
     }
     return undefined;
   }

@@ -34,9 +34,7 @@ export default class MessageService implements IMessageService {
     const user: User | undefined = await this._userService.getById(userId);
 
     if (!config.realtyGroup.MANAGER_PHONE) {
-      logger.fatal(
-        "Manager phone is required. Make sure it is specified in the settings."
-      );
+      logger.crit({ message: "Manager phone is required. Make sure it is specified in the settings." });
       return;
     }
 
@@ -73,10 +71,9 @@ export default class MessageService implements IMessageService {
               `${user.firstName} ${user.lastName}`
             );
           } else {
-            logger.error(
-              "User does not have phone number. UserId: %s",
-              user.id
-            );
+            logger.error({message: "User does not have phone number. UserId: %s",
+              userId: user.id
+          });
           }
         } else {
           if (user.username) {
@@ -99,20 +96,18 @@ export default class MessageService implements IMessageService {
               }
             );
           } else {
-            logger.error(
+            logger.error( {message: 
               "User does not have username and cannot be linked. UserId: %s",
-              user.id
-            );
+              userId: user.id });
           }
         }
       } else {
         logger.error("Unable to get item by id: %s", user.interestedInItemId);
       }
     } else {
-      logger.error(
-        "Unable to send interested in notification. User or manager not found. UserId: %s, Manager phone: %",
-        userId,
-        config.realtyGroup.MANAGER_PHONE
+      logger.error({ message: "Unable to send interested in notification. User or manager not found. UserId: %s, Manager phone: %",
+        userId: userId,
+        managerPhone: config.realtyGroup.MANAGER_PHONE }
       );
     }
   }
